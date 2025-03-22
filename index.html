@@ -63,6 +63,10 @@
 
     <script>
         // Make helper functions available globally
+        window.closePopup = function () {
+            document.getElementById('telegram-popup').style.display = 'none';
+        };
+
         window.addVideo = function () {
             const id = document.getElementById('videoId').value.trim();
             const url = document.getElementById('videoUrl').value.trim();
@@ -180,7 +184,7 @@
             document.getElementById('content').innerHTML = videoHTML;
 
             jwplayer("video").setup({
-                file: "https://test-streams.mux.dev/tos_ismc/main.m3u8?ref=developerinsider.co",
+                file: "https://airplay.bgrid.in/IPTVS/live/voot/1033.m3u8",
                 type: 'application/x-mpegURL',
                 logo: { file: "jaishreeram.png", hide: true, position: 'top-right' },
                 preload: 'auto'
@@ -216,7 +220,6 @@
             // Initialize content based on URL parameters
             if (urlParams.get("admin") === "aniketh") {
                 showAdmin();
-            
             } else if (urlParams.has("id")) {
                 playVideo(urlParams.get("id"));
             } else {
