@@ -27,6 +27,7 @@
             max-height: 100px;
             margin: 0 15px;
             filter: drop-shadow(0 0 5px rgba(200, 200, 200, 0.5));        
+            
         }
 
         .container {
@@ -91,6 +92,7 @@
         .team-logo {
             max-height: 50px;
             margin: 0 10px;
+            
         }
 
         .vs {
@@ -101,11 +103,38 @@
             text-shadow: 0 0 10px rgba(255, 75, 43, 0.5);
         }
 
+        .footer {
+            position: relative;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            text-align: center;
+            padding: 10px;
+            font-size: 14px;
+            font-weight: bold;
+            backdrop-filter: blur(5px);
+            margin-top: 20px;
+        }
+
+        .footer a {
+            color: #03DAC6;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+            color: #00FF7F;
+        }
+
         #jwplayer {
             width: 100%;
             aspect-ratio: 16 / 9;
             border-radius: 10px;
             overflow: hidden;
+            
         }
 
         .stream-buttons {
@@ -133,6 +162,17 @@
             box-shadow: 0 0 20px rgba(255, 69, 0, 0.7);
         }
 
+        #ad-container {
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        #ad-container a img {
+            max-width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+        }
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(-10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -143,6 +183,7 @@
 
     <div class="logo-container">
         <img src="https://i.ibb.co/mr3mypnF/tata-ipl-logo-png-white-by-harshmore7781-dezxlwr-pre.png" alt="IPL 2025">
+        <img src="https://i.ibb.co/DHG5gvB6/1000084200-removebg-preview.png" alt="User Channel">
     </div>
 
     <div class="container">
@@ -150,6 +191,8 @@
         <div id="jwplayer"></div>
         <div class="stream-buttons" id="stream-buttons"></div>
     </div>
+
+    <div id="ad-container" class="container"></div>
 
     <script>
         async function fetchData() {
@@ -217,6 +260,15 @@
                     };
                     buttonContainer.appendChild(button);
                 });
+
+                // Load advertisement if available
+                if (matchData.ad_image && matchData.add_url) {
+                    document.getElementById("ad-container").innerHTML = `
+                        <a href="${matchData.add_url}" target="_blank">
+                            <img src="${matchData.ad_image}" alt="Advertisement">
+                        </a>
+                    `;
+                }
             } catch (error) {
                 console.error("Error loading data:", error);
                 alert("An error occurred while loading the data. Please try again.");
@@ -226,5 +278,45 @@
         fetchData();
     </script>
 
+    <footer class="footer">
+        <p>Join For More Link <a href="https://t.me/+Jt-5CtcdaQY5MmU9" target="_blank">Movies_Eera (Crick Eera)</a> | Keep Support</p>
+    </footer>
+
 </body>
 </html>
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blurred Background Alert</title>
+<style>
+body { font-family: Arial, sans-serif; background: #121212; color: white; text-align: center; margin: 0; }
+.blur-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; backdrop-filter: blur(4px); background: rgba(0, 0, 0, 0.5); display: none; z-index: 5; } /* Blurs only the background */
+.alert-box { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border-radius: 10px; box-shadow: 0px 0px 10px rgba(0,0,0,0.3); text-align: center; color: black; width: 300px; z-index: 10; } /* Alert remains clear */
+.alert-box p { font-size: 18px; margin-bottom: 15px; }
+.alert-box button { margin: 5px; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; }
+.join-btn { background: #3498db; color: white; }
+.close-btn { background: #2ecc71; color: white; }
+</style>
+</head>
+<body>
+<div id="blur-bg" class="blur-bg"></div> <!-- Background blur layer -->
+<div id="alert-box" class="alert-box">
+<p>Join Our Channel for More Match Link Or Make SupporT ! <b><blockquote>𝙿𝚘𝚠𝚎𝚛e𝚍 𝙱𝚢 ➥ <a href = 'http://t.me/Movies_Eera'>@𝐌𝐨𝐯𝐢𝐞𝐬_𝐄𝐞𝐫𝐚</a></blockquote></b></p>
+<button class="join-btn" onclick="window.open('https://t.me/+Jt-5CtcdaQY5MmU9', '_blank')">Join Channel</button>
+<button class="close-btn" onclick="closeAlert()">Already Joined</button>
+</div>
+<script>
+function showAlert() {
+document.getElementById('blur-bg').style.display = 'block'; // Show background blur
+document.getElementById('alert-box').style.display = 'block'; // Show alert box
+}
+function closeAlert() {
+document.getElementById('blur-bg').style.display = 'none'; // Hide background blur
+document.getElementById('alert-box').style.display = 'none'; // Hide alert box
+}
+setTimeout(showAlert, 0); // Show alert after 2 seconds
+</script>
+</body>
+</html>
+
+
