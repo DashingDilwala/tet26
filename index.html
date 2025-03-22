@@ -130,14 +130,6 @@
             border-radius: 5px;
         }
 
-        /* Clickable Telegram Link */
-        .telegram-link {
-            color: #4da3ff;
-            font-weight: bold;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
         /* Golden Glow Effect for Second Popup */
         #customPopup .popup-content {
             border: 3px solid #FFD700;
@@ -161,18 +153,6 @@
     <!-- Join Telegram Button -->
     <a href="https://t.me/+t5QIKbXyWMo4YTc9" class="join-btn">Join Telegram</a>
 
-    <!-- First Popup -->
-    <div class="popup" id="firstPopup">
-        <div class="popup-content">
-            <h2>Join Our Telegram Channel</h2>
-            <p>Stay updated with the latest content from Editverse!</p>
-            <div class="popup-buttons">
-                <button class="join-btn-popup" onclick="window.location.href='https://t.me/+t5QIKbXyWMo4YTc9'">Join Now</button>
-                <button class="already-btn" onclick="closePopup('firstPopup')">Close</button>
-            </div>
-        </div>
-    </div>
-
     <!-- Second Popup -->
     <div class="popup" id="customPopup">
         <div class="popup-content">
@@ -180,26 +160,22 @@
             <p>Join our Telegram channel <a href="https://t.me/+t5QIKbXyWMo4YTc9" class="telegram-link">Editverse</a> for more updates.</p>
             <div class="popup-buttons">
                 <button class="join-btn-popup" onclick="window.location.href='https://t.me/+t5QIKbXyWMo4YTc9'">Join Now</button>
-                <button class="already-btn" onclick="closePopup('customPopup')">Already Joined</button>
+                <button class="already-btn" onclick="closePopup()">Already Joined</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Show First Popup after 1 second
-        setTimeout(() => {
-            document.getElementById("firstPopup").style.display = "flex";
-        }, 1000);
+        // First Popup (Initial Modal Display)
+        window.onload = function() {
+            setTimeout(() => {
+                document.getElementById("customPopup").style.display = "flex";
+            }, 1000); // Delay 1 second before showing the modal
+        };
 
-        // Close Popup Function
-        function closePopup(popupId) {
-            document.getElementById(popupId).style.display = "none";
-            // Show Second Popup after the first one closes
-            if (popupId === "firstPopup") {
-                setTimeout(() => {
-                    document.getElementById("customPopup").style.display = "flex";
-                }, 500);
-            }
+        // Close Second Popup
+        function closePopup() {
+            document.getElementById("customPopup").style.display = "none";
         }
 
         // JW Player Setup
