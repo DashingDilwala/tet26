@@ -1,1 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPL 2025 Live Streaming</title>
+    <script src="https://content.jwplatform.com/libraries/SAHhwvZq.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #0a0a0a;
+            color: white;
+            text-align: center;
+            overflow-x: hidden;
+            padding-bottom: 80px;
+        }
 
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .logo-container img {
+            max-height: 100px;
+            margin: 0 15px;
+            filter: drop-shadow(0 0 5px rgba(200, 200, 200, 0.5));        
+        }
+
+        .container {
+            max-width: 850px;
+            margin: auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .container:hover {
+            transform: scale(1.02);
+        }
+
+        .match-card {
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            padding: 5px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            text-align: left;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+            animation: fadeIn 1s ease-in-out;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .match-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+        }
+
+        .match-card h3 {
+            margin: 0;
+            font-size: 24px;
+            color: cyan;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+        }
+
+        .match-card p {
+            margin: 10px 0;
+            font-size: 16px;
+            opacity: 0.9;
+            color: #ddd;
+        }
+
+        .match-card .status {
+            font-weight: bold;
+            color: #ff4b2b;
+            text-shadow: 0 0 5px rgba(255, 75, 43, 0.5);
+        }
+
+        .teams {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 15px 0;
+        }
+
+        .team-logo {
+            max-height: 50px;
+            margin: 0 10px;
+        }
+
+        .vs {
+            font-size: 20px;
+            font-weight: bold;
+            color: #ff4b2b;
+            margin: 0 15px;
+            text-shadow: 0 0 10px rgba(255, 75, 43, 0.5);
+        }
+
+        #jwplayer {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .stream-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .stream-btn {
+            margin: 5px;
+            padding: 5px 10px;
+            background: linear-gradient(45deg, #ff416c, #ff4b2b);
+            border: none;
+            color: white;
+            cursor: pointer;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: 0.3s;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        .stream-btn:hover, .stream-btn.active {
+            background: linear-gradient(45deg, #ff4b2b, #ff416c);
+            box-shadow: 0 0 20px rgba(255, 69, 0, 0.7);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="logo-container">
+        <img src="https://i.ibb.co/mr3mypnF/tata-ipl-logo-png-white-by-harshmore7781-dezxlwr-pre.png" alt="IPL 2025">
+    </div>
+
+    <div class="container">
+        <div class="match-card" id="match-info"></div>
+        <div id="jwplayer"></div>
+        <div class="stream-buttons" id="stream-buttons"></div>
+    </div>
+
+    <script>
+        async function fetchData() {
+            try {
+                const urlParams = new URLSearchParams(window.location.search);
+                const streamId = urlParams.get("id");
+
+                console.log("Stream ID:", streamId); // Debugging
+
+                if (!streamId) {
+                    alert("No stream ID provided!");
+                    return;
+                }
+
+                // Cache-busting to avoid loading old JSON
+                const response = await fetch("streams.json?v=" + new Date().getTime());
+                const data = await response.json();
+
+                console.log("Fetched Data:", data); // Debugging
+
+                const matchData = data[String(streamId)];
+
+                console.log("Match Data:", matchData); // Debugging
+
+                if (!matchData) {
+                    alert("Invalid stream ID!");
+                    return;
+                }
+
+                // Update match info
+                document.getElementById("match-info").innerHTML = `
+                    <h3>${matchData.match_number}: ${matchData.title}</h3>
+                    <div class="teams">
+                        <img src="${matchData.team1_logo}" alt="${matchData.team1}" class="team-logo">
+                        <span class="vs">VS</span>
+                        <img src="${matchData.team2_logo}" alt="${matchData.team2}" class="team-logo">
+                    </div>
+                    <p>Venue: ${matchData.venue}</p>
+                    <p>Date & Time: ${matchData.date_time}</p>
+                    <p>Status: <span class="status">${matchData.status}</span></p>
+                `;
+
+                // Initialize JWPlayer with the first stream
+                const streams = matchData.streams;
+                let player = jwplayer("jwplayer").setup({
+                    playlist: [{ file: streams[Object.keys(streams)[0]] }],
+                    width: "100%",
+                    aspectratio: "16:9",
+                    autostart: true,
+                    mute: false,
+                    controls: true
+                });
+
+                // Create stream buttons
+                const buttonContainer = document.getElementById("stream-buttons");
+                buttonContainer.innerHTML = "";
+
+                Object.keys(streams).forEach(title => {
+                    const button = document.createElement("button");
+                    button.className = "stream-btn";
+                    button.innerText = title;
+                    button.onclick = () => {
+                        player.load([{ file: streams[title] }]);
+                        player.play();
+                    };
+                    buttonContainer.appendChild(button);
+                });
+            } catch (error) {
+                console.error("Error loading data:", error);
+                alert("An error occurred while loading the data. Please try again.");
+            }
+        }
+
+        fetchData();
+    </script>
+
+</body>
+</html>
