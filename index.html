@@ -86,25 +86,28 @@
             transform: translate(-50%, -50%);
             background: #282828;
             color: #fff;
-            padding: 20px;
+            padding: 30px;
             border-radius: 10px;
             text-align: center;
             z-index: 1000;
-            box-shadow: 0px 0px 10px #00BFFF;
+            box-shadow: 0px 0px 15px #00BFFF;
+            width: 400px; /* Increased popup size */
         }
 
         .popup-content h2 {
-            margin-bottom: 10px;
+            margin-bottom: 15px;
+            font-size: 24px; /* Larger heading */
         }
 
         .popup-content p {
             margin-bottom: 20px;
+            font-size: 16px; /* Larger text */
         }
 
         .popup-buttons {
             display: flex;
             justify-content: center;
-            gap: 10px;
+            gap: 15px;
         }
 
         .join-btn-popup,
@@ -112,10 +115,10 @@
             background: #00BFFF;
             color: white;
             border: none;
-            padding: 10px 20px;
+            padding: 12px 24px;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 16px; /* Larger button text */
         }
 
         .join-btn-popup:hover,
@@ -136,13 +139,11 @@
 </head>
 
 <body>
-    <center>
-        <div id="heading-container">
-            <h3>Online Video Player</h3>
-        </div>
-    </center>
+    
 
-    <!-- Telegram Button Section -->
+    <div id="content"></div>
+
+    <!-- Telegram Button Section (Moved below the video player) -->
     <div class="telegram-button">
         <a href="https://t.me/+xl-C7GFGTkM4MDk5" target="_blank">Join Telegram Channel</a>
     </div>
@@ -153,8 +154,6 @@
             "Copyright Disclaimer: We do not stream any of the channels included in this website. All streaming links are from third-party websites freely available on the internet. All content is the copyright of its respective owners."
         </marquee>
     </div>
-
-    <div id="content"></div>
 
     <!-- Second Popup -->
     <div class="popup" id="customPopup">
