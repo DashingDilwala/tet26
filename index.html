@@ -1,459 +1,157 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Little Codr IPL Live</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Online Video Player</title>
+    <meta name="description" content="Watch videos online with our interactive video player." />
+    <script src="https://content.jwplatform.com/libraries/SAHhwvZq.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
         body {
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            background-color: #121212;
+            margin: 0;
+            background-color: #181818;
+            color: #fff;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            padding-top: 60px; /* Add padding to account for fixed navbar */
         }
-        .navbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 60px;
-            background-color: #1e1e1e;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 20px;
-            z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-        }
-        .navbar-brand {
-            color: #fff;
-            font-size: 24px;
-            font-weight: bold;
-        }
-        .navbar-links {
-            display: flex;
-            list-style: none;
-        }
-        .navbar-links li {
-            margin-left: 20px;
-        }
-        .navbar-links a {
-            color: #fff;
-            text-decoration: none;
-            font-size: 16px;
-            transition: color 0.2s;
-        }
-        .navbar-links a:hover {
-            color: #007bff;
-        }
-        .menu-toggle {
-            display: none;
-            flex-direction: column;
-            justify-content: space-between;
-            width: 30px;
-            height: 21px;
-            cursor: pointer;
-        }
-        .menu-toggle span {
-            height: 3px;
-            width: 100%;
-            background-color: white;
-            border-radius: 3px;
-        }
-        .container {
-            width: 100%;
-            padding: 0 10px;
-            display: flex;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-            border-radius: 8px;
-            overflow: hidden;
-            flex: 1;
-        }
-        .sidebar {
-            width: 300px;
-            background-color: #1e1e1e;
-            color: #ffffff;
-            padding: 20px;
-            height: calc(95vh - 60px);
-            overflow-y: auto;
-        }
-        .sidebar h3 {
-            margin-bottom: 15px;
-            font-size: 18px;
-            border-bottom: 1px solid #333;
-            padding-bottom: 10px;
-        }
-        .sidebar ul {
-            list-style-type: none;
-        }
-        .sidebar li {
-            padding: 8px 0;
-            border-bottom: 1px solid #333;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-        .sidebar li:hover {
-            background-color: #2a2a2a;
-        }
-        .main-content {
-            flex: 1;
-            min-width: auto;
-            position: relative;
-            overflow: hidden;
-        }
-        .iframe-container {
-            width: 100%;
-            height: calc(95vh - 60px);
-            overflow: hidden;
-        }
-        iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-        .video-title {
-            background-color: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 15px;
+
+        #heading-container {
+            background-color: #282828;
             text-align: center;
-            border-radius: 8px 8px 0 0;
-            font-size: 20px;
+            font-size: 22px;
+            padding: 5px 40px;
+            margin: 20px auto;
+            border: 2px solid #00BFFF;
+            border-radius: 50px;
+            width: fit-content;
         }
 
-        /* Media Queries for Responsiveness */
-        @media screen and (max-width: 1200px) {
-            .sidebar {
-                width: 250px;
-            }
+        #video-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            margin: 20px;
         }
 
-        @media screen and (max-width: 992px) {
-            .sidebar {
-                width: 200px;
-            }
-            .container {
-                padding: 0 5px;
-            }
+        #video {
+            width: 80%;
+            max-width: 1000px;
+            padding: 20px 40px;
+            margin: 0 auto;
         }
 
-        @media screen and (max-width: 768px) {
-            .container {
-                flex-direction: column;
-            }
-            .sidebar {
-                width: 100%;
-                height: auto;
-                max-height: 200px;
-            }
-            .iframe-container {
-                height: 50vh;
-            }
-            .navbar-links {
-                position: fixed;
-                right: -100%;
-                top: 60px;
-                width: 70%;
-                height: calc(100% - 60px);
-                background-color: #1e1e1e;
-                flex-direction: column;
-                padding: 20px;
-                transition: right 0.3s ease;
-            }
-            .navbar-links.active {
-                right: 0;
-            }
-            .navbar-links li {
-                margin: 15px 0;
-            }
-            .menu-toggle {
-                display: flex;
-            }
-        }
-
-        @media screen and (max-width: 576px) {
-            .navbar-brand {
-                font-size: 20px;
-            }
-            .navbar-links {
-                padding: 5px 8px;
-            }
-            .navbar-links li {
-                margin: 15px 0;
-            }
-            .menu-toggle {
-                display: flex;
-            }
+        /* Access Denied Styles */
+        .access-denied {
+            text-align: center;
+            margin-top: 100px;
+            color: #FF3333;
+            font-size: 28px;
         }
     </style>
 </head>
 <body>
-    <nav class="navbar">
-        <div class="navbar-brand">Little Codr IPL StreamPlay</div>
-        <div class="menu-toggle" onclick="toggleMenu()">
-            <span></span>
-            <span></span>
-            <span></span>
+    <center>
+        <div id="heading-container">
+            <h3>Online Video Player</h3>
         </div>
-        <ul class="navbar-links" id="navLinks">
-            <li><a href="/">Home</a></li>
-        </ul>
-    </nav>
-    
-    <div class="container">
-        <div class="sidebar left-sidebar">
-            <!-- Left sidebar content (if any) -->
-        </div>
-        <div class="main-content">
-            <div class="iframe-container" id="iframe-container">
-                <iframe src="https://savecontentbot-tgx-dl.vercel.app/player.html?id=Sports18&hidepopups=1"></iframe>
-            </div>
-        </div>
-        <div class="sidebar right-sidebar">
-            <!-- Right sidebar content (if any) -->
-        </div>
-    </div>
+    </center>
+
+    <div id="content"></div>
 
     <script>
-        function toggleMenu() {
-            const navLinks = document.getElementById('navLinks');
-            navLinks.classList.toggle('active');
+        // Play video with given ID
+        function playVideo(videoId) {
+            console.log("Attempting to fetch video with ID:", videoId);
+
+            fetch(`/api/videos/${videoId}`)
+                .then(res => {
+                    console.log("Response status:", res.status);
+                    return res.text().then(text => {
+                        console.log("Raw response:", text);
+
+                        try {
+                            return JSON.parse(text);
+                        } catch (e) {
+                            throw new Error(`Failed to parse response: ${e.message}. Raw response: ${text.substring(0, 100)}...`);
+                        }
+                    });
+                })
+                .then(data => {
+                    console.log("Video data received:", data);
+
+                    if (!data || !data.url) {
+                        throw new Error(`Video data invalid for ID "${videoId}"`);
+                    }
+
+                    const videoHTML = `
+                      <div id="video-container">
+                        <div id="video"></div>
+                      </div>
+                    `;
+                    document.getElementById('content').innerHTML = videoHTML;
+
+                    const videoUrl = data.requires_cors ?
+                        `/api/proxy?url=${encodeURIComponent(data.url)}` :
+                        data.url;
+
+                    console.log("Using video URL:", videoUrl);
+
+                    jwplayer("video").setup({
+                        file: videoUrl,
+                        type: 'application/x-mpegURL',
+                        logo: { file: "jaishreeram.png", hide: true, position: 'top-right' },
+                        preload: 'auto',
+                        autostart: false,
+                        width: "100%"
+                    }).on('error', function (e) {
+                        console.error('JWPlayer error:', e);
+                        document.getElementById('content').innerHTML +=
+                            `<div style="color:red;text-align:center;margin-top:20px;">
+                            Error playing video: ${e.message}
+                        </div>`;
+                    });
+                })
+                .catch(err => {
+                    console.error('Error fetching or playing video:', err);
+                    document.getElementById('content').innerHTML =
+                        `<div style="text-align:center;margin-top:100px;">
+                        <h2>Error loading video</h2>
+                        <p>Could not load video for ID "${videoId}"</p>
+                        <p>Error: ${err.message}</p>
+                        <a href="/" style="color:#00BFFF;">Back to home</a>
+                    </div>`;
+                });
         }
+
+        // Play default video if no video ID is provided
+        function playDefaultVideo() {
+            const videoHTML = `
+                  <div id="video-container">
+                    <div id="video"></div>
+                  </div>
+                `;
+            document.getElementById('content').innerHTML = videoHTML;
+
+            jwplayer("video").setup({
+                file: "https://test-streams.mux.dev/tos_ismc/main.m3u8?ref=developerinsider.co",
+                type: 'application/x-mpegURL',
+                logo: { file: "jaishreeram.png", hide: true, position: 'top-right' },
+                preload: 'auto'
+            });
+        }
+
+        /*** Main Initialization ***/
+        document.addEventListener("DOMContentLoaded", function () {
+            // Parse URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+
+            // Initialize content based on URL parameters
+            if (urlParams.has("id")) {
+                playVideo(urlParams.get("id"));
+            } else {
+                playDefaultVideo();
+            }
+        });
     </script>
 </body>
-</html><!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Little Codr IPL Live</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            background-color: #121212;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            padding-top: 60px; /* Add padding to account for fixed navbar */
-        }
-        .navbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 60px;
-            background-color: #1e1e1e;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 20px;
-            z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-        }
-        .navbar-brand {
-            color: #fff;
-            font-size: 24px;
-            font-weight: bold;
-        }
-        .navbar-links {
-            display: flex;
-            list-style: none;
-        }
-        .navbar-links li {
-            margin-left: 20px;
-        }
-        .navbar-links a {
-            color: #fff;
-            text-decoration: none;
-            font-size: 16px;
-            transition: color 0.2s;
-        }
-        .navbar-links a:hover {
-            color: #007bff;
-        }
-        .menu-toggle {
-            display: none;
-            flex-direction: column;
-            justify-content: space-between;
-            width: 30px;
-            height: 21px;
-            cursor: pointer;
-        }
-        .menu-toggle span {
-            height: 3px;
-            width: 100%;
-            background-color: white;
-            border-radius: 3px;
-        }
-        .container {
-            width: 100%;
-            padding: 0 10px;
-            display: flex;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-            border-radius: 8px;
-            overflow: hidden;
-            flex: 1;
-        }
-        .sidebar {
-            width: 300px;
-            background-color: #1e1e1e;
-            color: #ffffff;
-            padding: 20px;
-            height: calc(95vh - 60px);
-            overflow-y: auto;
-        }
-        .sidebar h3 {
-            margin-bottom: 15px;
-            font-size: 18px;
-            border-bottom: 1px solid #333;
-            padding-bottom: 10px;
-        }
-        .sidebar ul {
-            list-style-type: none;
-        }
-        .sidebar li {
-            padding: 8px 0;
-            border-bottom: 1px solid #333;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-        .sidebar li:hover {
-            background-color: #2a2a2a;
-        }
-        .main-content {
-            flex: 1;
-            min-width: auto;
-            position: relative;
-            overflow: hidden;
-        }
-        .iframe-container {
-            width: 100%;
-            height: calc(95vh - 60px);
-            overflow: hidden;
-        }
-        iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-        .video-title {
-            background-color: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 15px;
-            text-align: center;
-            border-radius: 8px 8px 0 0;
-            font-size: 20px;
-        }
-
-        /* Media Queries for Responsiveness */
-        @media screen and (max-width: 1200px) {
-            .sidebar {
-                width: 250px;
-            }
-        }
-
-        @media screen and (max-width: 992px) {
-            .sidebar {
-                width: 200px;
-            }
-            .container {
-                padding: 0 5px;
-            }
-        }
-
-        @media screen and (max-width: 768px) {
-            .container {
-                flex-direction: column;
-            }
-            .sidebar {
-                width: 100%;
-                height: auto;
-                max-height: 200px;
-            }
-            .iframe-container {
-                height: 50vh;
-            }
-            .navbar-links {
-                position: fixed;
-                right: -100%;
-                top: 60px;
-                width: 70%;
-                height: calc(100% - 60px);
-                background-color: #1e1e1e;
-                flex-direction: column;
-                padding: 20px;
-                transition: right 0.3s ease;
-            }
-            .navbar-links.active {
-                right: 0;
-            }
-            .navbar-links li {
-                margin: 15px 0;
-            }
-            .menu-toggle {
-                display: flex;
-            }
-        }
-
-        @media screen and (max-width: 576px) {
-            .navbar-brand {
-                font-size: 20px;
-            }
-            .navbar-links {
-                padding: 5px 8px;
-            }
-            .navbar-links li {
-                margin: 15px 0;
-            }
-            .menu-toggle {
-                display: flex;
-            }
-        }
-    </style>
-</head>
-<body>
-    <nav class="navbar">
-        <div class="navbar-brand">Little Codr IPL StreamPlay</div>
-        <div class="menu-toggle" onclick="toggleMenu()">
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
-        <ul class="navbar-links" id="navLinks">
-            <li><a href="/">Home</a></li>
-        </ul>
-    </nav>
-    
-    <div class="container">
-        <div class="sidebar left-sidebar">
-            <!-- Left sidebar content (if any) -->
-        </div>
-        <div class="main-content">
-            <div class="iframe-container" id="iframe-container">
-                <iframe src="https://savecontentbot-tgx-dl.vercel.app/player.html?id=Sports18&hidepopups=1"></iframe>
-            </div>
-        </div>
-        <div class="sidebar right-sidebar">
-            <!-- Right sidebar content (if any) -->
-        </div>
-    </div>
-
-    <script>
-        function toggleMenu() {
-            const navLinks = document.getElementById('navLinks');
-            navLinks.classList.toggle('active');
-        }
-    </script>
-</body>
-</html> 
+</html>
