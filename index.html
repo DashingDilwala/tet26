@@ -1,123 +1,171 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kmri Cricker</title>
-  <script src="https://content.jwplatform.com/libraries/KB5zFt7A.js"></script>
-  <style>
-    body {
-      background-color: black; /* Set background color to black */
-      margin: 0; /* Remove default margin */
-      display: flex; /* Use flexbox for centering */
-      flex-direction: column; /* Stack elements vertically */
-      justify-content: center; /* Center horizontally */
-      align-items: center; /* Center vertically */
-      height: 100vh; /* Full viewport height */
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPL Player Tracker</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #1e1e2f, #3a3a5a);
+            color: white;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
 
-    #video {
-      width: 100%; /* Full width */
-      max-width: 800px; /* Maximum width for larger screens */
-      aspect-ratio: 16 / 9; /* Maintain 16:9 aspect ratio */
-    }
+        .container {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin-top: 50px;
+            padding: 20px;
+            gap: 20px;
+        }
 
-    .telegram-button {
-      background-color: #0074d9; /* Button background color */
-      color: #fff; /* Button text color */
-      border: none; /* Remove border */
-      padding: 10px 20px; /* Padding for the button */
-      cursor: pointer; /* Pointer cursor on hover */
-      margin-top: 20px; /* Space above the button */
-    }
+        .box {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            text-align: left;
+        }
 
-    .telegram-button:hover {
-      background-color: #005bb5; /* Darker blue on hover */
-    }
-  </style>
+        .small {
+            width: 25%;
+            min-width: 250px;
+        }
+
+        .medium {
+            width: 40%;
+            min-width: 300px;
+        }
+
+        .large {
+            width: 30%;
+            min-width: 300px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            text-align: center;
+        }
+
+        th {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        input, textarea, select, button {
+            width: 90%;
+            padding: 8px;
+            margin-top: 8px;
+            border: none;
+            border-radius: 5px;
+            font-size: 12px;
+        }
+
+        input, textarea, select {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        button {
+            background: #ff5722;
+            color: white;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+            button:hover {
+                background: #e64a19;
+            }
+    </style>
 </head>
 <body>
-  <div id="video"></div>
+    <div class="container">
+        <div class="box medium">
+            <h3>Match Records</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Team</th>
+                        <th>Result</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="matchTable"></tbody>
+            </table>
+            <p id="totalWins"></p>
+            <input type="text" id="player" placeholder="Enter Name (Gopesh/Vivek)">
+            <input type="text" id="team" placeholder="Enter Team">
+            <select id="result">
+                <option value="NA">NA</option>
+                <option value="Won">Won</option>
+                <option value="Lost">Lost</option>
+            </select>
+            <button onclick="addMatchEntry()">Add Entry</button>
+        </div>
+    </div>
 
-  <script type="text/javascript">
-    jwplayer("video").setup({
-      image: "https://i.postimg.cc/9XGtny3q/IMG-20250221-222251-004.jpg",
-      width: "100%",
-      aspectratio: "16:9",
-      autostart: false,
-      primary: "html5",
-      preload: "auto",
-      mute: false,
-      file: "https://customer-0agod1prlrzpzm4j.cloudflarestream.com/cf8ee648905593faeecbec29b1ffd2f8/manifest/video.m3u8" /* Updated video link */
-    });
-  </script>
+    <script>
+        let matchRecords = JSON.parse(localStorage.getItem("matchRecords")) || [];
 
-  <div style="text-align: center;">
-    <a href="https://t.me/kmricricker" target="_blank">
-      <button class="telegram-button">Join Telegram</button>
-    </a>
-  </div>
-</body>
-</html><!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kmri Cricker</title>
-  <script src="https://content.jwplatform.com/libraries/KB5zFt7A.js"></script>
-  <style>
-    body {
-      background-color: black; /* Set background color to black */
-      margin: 0; /* Remove default margin */
-      display: flex; /* Use flexbox for centering */
-      flex-direction: column; /* Stack elements vertically */
-      justify-content: center; /* Center horizontally */
-      align-items: center; /* Center vertically */
-      height: 100vh; /* Full viewport height */
-    }
+        function addMatchEntry() {
+            let name = document.getElementById("player").value;
+            let team = document.getElementById("team").value;
+            let result = document.getElementById("result").value;
+            if (name && team) {
+                matchRecords.push({ name, team, result });
+                localStorage.setItem("matchRecords", JSON.stringify(matchRecords));
+                renderMatchTable();
+            }
+        }
 
-    #video {
-      width: 100%; /* Full width */
-      max-width: 800px; /* Maximum width for larger screens */
-      aspect-ratio: 16 / 9; /* Maintain 16:9 aspect ratio */
-    }
+        function editMatchEntry(index) {
+            let record = matchRecords[index];
+            let newTeam = prompt("Enter new team:", record.team);
+            let newResult = prompt("Enter new result (Won/Lost):", record.result);
+            if (newTeam && newResult) {
+                matchRecords[index].team = newTeam;
+                matchRecords[index].result = newResult;
+                localStorage.setItem("matchRecords", JSON.stringify(matchRecords));
+                renderMatchTable();
+            }
+        }
 
-    .telegram-button {
-      background-color: #0074d9; /* Button background color */
-      color: #fff; /* Button text color */
-      border: none; /* Remove border */
-      padding: 10px 20px; /* Padding for the button */
-      cursor: pointer; /* Pointer cursor on hover */
-      margin-top: 20px; /* Space above the button */
-    }
+        function renderMatchTable() {
+            let table = document.getElementById("matchTable");
+            table.innerHTML = "";
+            let winCounts = { Gopesh: 0, Vivek: 0 };
+            matchRecords.forEach((record, index) => {
+                let row = `<tr>
+                                    <td>${record.name}</td>
+                                    <td>${record.team}</td>
+                                    <td>${record.result}</td>
+                                    <td><button onclick="editMatchEntry(${index})">Edit</button></td>
+                                </tr>`;
+                table.innerHTML += row;
+                if (record.result === "Won") {
+                    winCounts[record.name] = (winCounts[record.name] || 0) + 1;
+                }
+            });
+            document.getElementById("totalWins").innerText = `Gopesh Won: ${winCounts.Gopesh || 0}, Vivek Won: ${winCounts.Vivek || 0}`;
+        }
 
-    .telegram-button:hover {
-      background-color: #005bb5; /* Darker blue on hover */
-    }
-  </style>
-</head>
-<body>
-  <div id="video"></div>
-
-  <script type="text/javascript">
-    jwplayer("video").setup({
-      image: "https://i.postimg.cc/9XGtny3q/IMG-20250221-222251-004.jpg",
-      width: "100%",
-      aspectratio: "16:9",
-      autostart: false,
-      primary: "html5",
-      preload: "auto",
-      mute: false,
-      file: "https://customer-0agod1prlrzpzm4j.cloudflarestream.com/cf8ee648905593faeecbec29b1ffd2f8/manifest/video.m3u8" /* Updated video link */
-    });
-  </script>
-
-  <div style="text-align: center;">
-    <a href="https://t.me/kmricricker" target="_blank">
-      <button class="telegram-button">Join Telegram</button>
-    </a>
-  </div>
+        renderMatchTable();
+    </script>
 </body>
 </html>
