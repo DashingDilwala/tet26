@@ -1,283 +1,452 @@
+
 <!DOCTYPE html>
-<html lang="en">
 
+
+
+		<html prefix="og: http://ogp.me/ns#" lang="en-US" id="h" class="load" style="margin-top: 0px !important;">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Online Video Player</title>
-    <meta name="description" content="Watch videos online with our interactive video player." />
-    <script src="https://content.jwplatform.com/libraries/SAHhwvZq.js"></script>
+	<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6515742400814180"
+     crossorigin="anonymous"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1"/>
+<meta content='yes' name='apple-mobile-web-app-capable' />
+<meta name='robots' content='index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1' />
+<meta name='robots' content='index,follow' />
 
-    <style>
-        body {
-            margin: 0;
-            background-color: #181818;
-            color: #fff;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+	<!-- This site is optimized with the Yoast SEO Premium plugin v21.7 (Yoast SEO v22.0) - https://yoast.com/wordpress/plugins/seo/ -->
+	<title>Filmaxx</title>
+	<link rel="canonical" href="fILMAXX" />
+	<meta property="og:locale" content="en_US" />
+	<meta property="og:type" content="article" />
+	<meta property="og:title" content="App" />
+	<meta property="og:url" content="" />
+	<meta property="og:site_name" content="Super Mod" />
+	<meta name="twitter:card" content="summary_large_image" />
+	<script type="application/ld+json" class="yoast-schema-graph"></script>
+	<!-- / Yoast SEO Premium plugin. -->
 
-        #heading-container {
-            background-color: #282828;
-            text-align: center;
-            font-size: 22px;
-            padding: 5px 40px;
-            margin: 20px auto;
-            border: 2px solid #00BFFF;
-            border-radius: 50px;
-            width: fit-content;
-        }
 
-        #video-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            margin: 20px;
-        }
+		<!-- This site uses the Google Analytics by MonsterInsights plugin v8.24.0 - Using Analytics tracking - https://www.monsterinsights.com/ -->
+							<script src="//www.googletagmanager.com/gtag/js?id=G-KF4BTB7W31"  data-cfasync="false" data-wpfc-render="false" type="text/javascript" async></script>
+			<script data-cfasync="false" data-wpfc-render="false" type="text/javascript">
+				var mi_version = '8.24.0';
+				var mi_track_user = true;
+				var mi_no_track_reason = '';
+								var MonsterInsightsDefaultLocations = {"page_location":"https:\/\/supermod.in\/app\/page\/2\/","page_referrer":"https:\/\/supermod.in\/app\/"};
+				if ( typeof MonsterInsightsPrivacyGuardFilter === 'function' ) {
+					var MonsterInsightsLocations = (typeof MonsterInsightsExcludeQuery === 'object') ? MonsterInsightsPrivacyGuardFilter( MonsterInsightsExcludeQuery ) : MonsterInsightsPrivacyGuardFilter( MonsterInsightsDefaultLocations );
+				} else {
+					var MonsterInsightsLocations = (typeof MonsterInsightsExcludeQuery === 'object') ? MonsterInsightsExcludeQuery : MonsterInsightsDefaultLocations;
+				}
 
-        #video {
-            width: 80%;
-            max-width: 1000px;
-            padding: 20px 40px;
-            margin: 0 auto;
-        }
+								var disableStrs = [
+										'ga-disable-G-KF4BTB7W31',
+									];
 
-        /* Disclaimer Section */
-        .disclaimer {
-            background-color: #282828;
-            color: #fff;
-            padding: 10px;
-            margin: 20px auto;
-            text-align: center;
-            font-size: 14px;
-            border: 1px solid #00BFFF;
-            border-radius: 5px;
-            width: 90%;
-            max-width: 1000px;
-        }
+				/* Function to detect opted out users */
+				function __gtagTrackerIsOptedOut() {
+					for (var index = 0; index < disableStrs.length; index++) {
+						if (document.cookie.indexOf(disableStrs[index] + '=true') > -1) {
+							return true;
+						}
+					}
 
-        .disclaimer marquee {
-            color: #FF3333;
-        }
+					return false;
+				}
 
-        /* Telegram Button Section */
-        .telegram-button {
-            text-align: center;
-            margin: 20px 0;
-        }
+				/* Disable tracking if the opt-out cookie exists. */
+				if (__gtagTrackerIsOptedOut()) {
+					for (var index = 0; index < disableStrs.length; index++) {
+						window[disableStrs[index]] = true;
+					}
+				}
 
-        .telegram-button a {
-            background-color: #00BFFF;
-            color: white;
-            padding: 10px 20px;
-            text-decoration: none;
-            border-radius: 5px;
-            font-size: 16px;
-        }
+				/* Opt-out function */
+				function __gtagTrackerOptout() {
+					for (var index = 0; index < disableStrs.length; index++) {
+						document.cookie = disableStrs[index] + '=true; expires=Thu, 31 Dec 2099 23:59:59 UTC; path=/';
+						window[disableStrs[index]] = true;
+					}
+				}
 
-        .telegram-button a:hover {
-            background-color: #009ACD;
-        }
+				if ('undefined' === typeof gaOptout) {
+					function gaOptout() {
+						__gtagTrackerOptout();
+					}
+				}
+								window.dataLayer = window.dataLayer || [];
 
-        /* Second Popup */
-        .popup {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: #282828;
-            color: #fff;
-            padding: 30px;
-            border-radius: 10px;
-            text-align: center;
-            z-index: 1000;
-            box-shadow: 0px 0px 20px #00BFFF;
-            width: 300px; /* Further increased popup size */
-        }
+				window.MonsterInsightsDualTracker = {
+					helpers: {},
+					trackers: {},
+				};
+				if (mi_track_user) {
+					function __gtagDataLayer() {
+						dataLayer.push(arguments);
+					}
 
-        .popup-content h2 {
-            margin-bottom: 20px;
-            font-size: 20px; /* Larger heading */
-        }
+					function __gtagTracker(type, name, parameters) {
+						if (!parameters) {
+							parameters = {};
+						}
 
-        .popup-content p {
-            margin-bottom: 25px;
-            font-size: 20px; /* Larger text */
-        }
+						if (parameters.send_to) {
+							__gtagDataLayer.apply(null, arguments);
+							return;
+						}
 
-        .popup-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-        }
+						if (type === 'event') {
+														parameters.send_to = monsterinsights_frontend.v4_id;
+							var hookName = name;
+							if (typeof parameters['event_category'] !== 'undefined') {
+								hookName = parameters['event_category'] + ':' + name;
+							}
 
-        .join-btn-popup,
-        .already-btn {
-            background: #00BFFF;
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 20px; /* Larger button text */
-        }
+							if (typeof MonsterInsightsDualTracker.trackers[hookName] !== 'undefined') {
+								MonsterInsightsDualTracker.trackers[hookName](parameters);
+							} else {
+								__gtagDataLayer('event', name, parameters);
+							}
+							
+						} else {
+							__gtagDataLayer.apply(null, arguments);
+						}
+					}
 
-        .join-btn-popup:hover,
-        .already-btn:hover {
-            background: #009ACD;
-        }
+					__gtagTracker('js', new Date());
+					__gtagTracker('set', {
+						'developer_id.dZGIzZG': true,
+											});
+					if ( MonsterInsightsLocations.page_location ) {
+						__gtagTracker('set', MonsterInsightsLocations);
+					}
+										__gtagTracker('config', 'G-KF4BTB7W31', {"forceSSL":"true","link_attribution":"true"} );
+															window.gtag = __gtagTracker;										(function () {
+						/* https://developers.google.com/analytics/devguides/collection/analyticsjs/ */
+						/* ga and __gaTracker compatibility shim. */
+						var noopfn = function () {
+							return null;
+						};
+						var newtracker = function () {
+							return new Tracker();
+						};
+						var Tracker = function () {
+							return null;
+						};
+						var p = Tracker.prototype;
+						p.get = noopfn;
+						p.set = noopfn;
+						p.send = function () {
+							var args = Array.prototype.slice.call(arguments);
+							args.unshift('send');
+							__gaTracker.apply(null, args);
+						};
+						var __gaTracker = function () {
+							var len = arguments.length;
+							if (len === 0) {
+								return;
+							}
+							var f = arguments[len - 1];
+							if (typeof f !== 'object' || f === null || typeof f.hitCallback !== 'function') {
+								if ('send' === arguments[0]) {
+									var hitConverted, hitObject = false, action;
+									if ('event' === arguments[1]) {
+										if ('undefined' !== typeof arguments[3]) {
+											hitObject = {
+												'eventAction': arguments[3],
+												'eventCategory': arguments[2],
+												'eventLabel': arguments[4],
+												'value': arguments[5] ? arguments[5] : 1,
+											}
+										}
+									}
+									if ('pageview' === arguments[1]) {
+										if ('undefined' !== typeof arguments[2]) {
+											hitObject = {
+												'eventAction': 'page_view',
+												'page_path': arguments[2],
+											}
+										}
+									}
+									if (typeof arguments[2] === 'object') {
+										hitObject = arguments[2];
+									}
+									if (typeof arguments[5] === 'object') {
+										Object.assign(hitObject, arguments[5]);
+									}
+									if ('undefined' !== typeof arguments[1].hitType) {
+										hitObject = arguments[1];
+										if ('pageview' === hitObject.hitType) {
+											hitObject.eventAction = 'page_view';
+										}
+									}
+									if (hitObject) {
+										action = 'timing' === arguments[1].hitType ? 'timing_complete' : hitObject.eventAction;
+										hitConverted = mapArgs(hitObject);
+										__gtagTracker('event', action, hitConverted);
+									}
+								}
+								return;
+							}
 
-        .telegram-link {
-            color: #00BFFF;
-            text-decoration: none;
-            font-weight: bold;
-        }
+							function mapArgs(args) {
+								var arg, hit = {};
+								var gaMap = {
+									'eventCategory': 'event_category',
+									'eventAction': 'event_action',
+									'eventLabel': 'event_label',
+									'eventValue': 'event_value',
+									'nonInteraction': 'non_interaction',
+									'timingCategory': 'event_category',
+									'timingVar': 'name',
+									'timingValue': 'value',
+									'timingLabel': 'event_label',
+									'page': 'page_path',
+									'location': 'page_location',
+									'title': 'page_title',
+									'referrer' : 'page_referrer',
+								};
+								for (arg in args) {
+																		if (!(!args.hasOwnProperty(arg) || !gaMap.hasOwnProperty(arg))) {
+										hit[gaMap[arg]] = args[arg];
+									} else {
+										hit[arg] = args[arg];
+									}
+								}
+								return hit;
+							}
 
-        .telegram-link:hover {
-            text-decoration: underline;
-        }
-    </style>
-</head>
+							try {
+								f.hitCallback();
+							} catch (ex) {
+							}
+						};
+						__gaTracker.create = newtracker;
+						__gaTracker.getByName = newtracker;
+						__gaTracker.getAll = function () {
+							return [];
+						};
+						__gaTracker.remove = noopfn;
+						__gaTracker.loaded = true;
+						window['__gaTracker'] = __gaTracker;
+					})();
+									} else {
+										console.log("");
+					(function () {
+						function __gtagTracker() {
+							return null;
+						}
 
-<body>
-    
+						window['__gtagTracker'] = __gtagTracker;
+						window['gtag'] = __gtagTracker;
+					})();
+									}
+			</script>
+				<!-- / Google Analytics by MonsterInsights -->
+		<link rel='stylesheet' id='5Play-wp-report-post-css' href='https://supermod.in/wp-content/themes/5play/wp-report-post//css/style.css?ver=6.4.3' type='text/css' media='all' />
+<link rel='stylesheet' id='5Play-remodal-css' href='https://supermod.in/wp-content/themes/5play/wp-report-post//lib/remodal/remodal.css?ver=6.4.3' type='text/css' media='all' />
+<style></style>
+<link rel='dns-prefetch' href=' />
 
-    <!-- Disclaimer Section (Moved above the video player) -->
-    <div class="disclaimer">
-        <marquee behavior="scroll" direction="left">
-            "Copyright Disclaimer: We do not stream any of the channels included in this website. All streaming links are from third-party websites freely available on the internet. All content is the copyright of its respective owners."
-        </marquee>
-    </div>
+        <link rel="icon" href="" sizes="32x32" />
+<link rel="icon" href="" sizes="192x192" />
+<link rel="apple-touch-icon" href="" />
+<meta name="msapplication-TileImage" content="" />
 
-    <div id="content"></div>
+<!-- Theme Designer -->
+<meta name="designer" content="exthem.es" />
+<meta name="themes" content="5play" />
+<meta name="version" content="6.1" />
+<!-- Chrome, Firefox OS and Opera -->
+<meta content='' name='theme-color'/>
+<!-- Windows Phone -->
+<meta content='' name='msapplication-navbutton-color'/>
+<meta content='' name='apple-mobile-web-app-status-bar-style' />
+<!-- Styles for 5play v6.1 by exthem.es -->
 
-    <!-- Telegram Button Section (Moved below the video player) -->
-    <div class="telegram-button">
-        <a href="https://t.me/+xl-C7GFGTkM4MDk5" target="_blank">Join Telegram Channel</a>
-    </div>
-
-    <!-- Second Popup -->
-    <div class="popup" id="customPopup">
-        <div class="popup-content">
-            <h2>Support Us!</h2>
-            <p>Join our Telegram channel <a href="https://t.me/cricketguru071" class="telegram-link">Cricket Guru</a> for more updates.</p>
-            <div class="popup-buttons">
-                <button class="join-btn-popup" onclick="window.location.href='https://t.me/cricketguru071'">Join Now</button>
-                <button class="already-btn" onclick="closePopup()">Already Joined</button>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // Play video with given ID
-        function playVideo(videoId) {
-            console.log("Attempting to fetch video with ID:", videoId);
-
-            // Fix: Use the correct URL format - ensure no trailing slash
-            fetch(`/api/videos/${videoId}`)
-                .then(res => {
-                    console.log("Response status:", res.status);
-                    return res.text().then(text => {
-                        // Debug: Log the raw response to see what's coming back
-                        console.log("Raw response:", text);
-
-                        try {
-                            // Try to parse as JSON
-                            return JSON.parse(text);
-                        } catch (e) {
-                            // If parsing fails, throw with details
-                            throw new Error(`Failed to parse response: ${e.message}. Raw response: ${text.substring(0, 100)}...`);
-                        }
-                    });
-                })
-                .then(data => {
-                    console.log("Video data received:", data);
-
-                    if (!data || !data.url) {
-                        throw new Error(`Video data invalid for ID "${videoId}"`);
-                    }
-
-                    const videoHTML = `
-                      <div id="video-container">
-                        <div id="video"></div>
-                      </div>
-                    `;
-                    document.getElementById('content').innerHTML = videoHTML;
-
-                    const videoUrl = data.requires_cors ?
-                        `/api/proxy?url=${encodeURIComponent(data.url)}` :
-                        data.url;
-
-                    console.log("Using video URL:", videoUrl);
-
-                    jwplayer("video").setup({
-                        file: videoUrl,
-                        type: 'application/x-mpegURL',
-                        logo: { file: "jaishreeram.png", hide: true, position: 'top-right' },
-                        preload: 'auto',
-                        autostart: false,
-                        width: "100%"
-                    }).on('error', function (e) {
-                        console.error('JWPlayer error:', e);
-                        document.getElementById('content').innerHTML +=
-                            `<div style="color:red;text-align:center;margin-top:20px;">
-                            Error playing video: ${e.message}
-                        </div>`;
-                    });
-                })
-                .catch(err => {
-                    console.error('Error fetching or playing video:', err);
-                    document.getElementById('content').innerHTML =
-                        `<div style="text-align:center;margin-top:100px;">
-                        <h2>Error loading video</h2>
-                        <p>Could not load video for ID "${videoId}"</p>
-                        <p>Error: ${err.message}</p>
-                        <a href="/" style="color:#00BFFF;">Back to home</a>
-                    </div>`;
-                });
-        }
-
-        // Play default video if no video ID is provided
-        function playDefaultVideo() {
-            const videoHTML = `
-                  <div id="video-container">
-                    <div id="video"></div>
-                  </div>
-                `;
-            document.getElementById('content').innerHTML = videoHTML;
-
-            jwplayer("video").setup({
-                file: "https://v18tataplaysyndication.akamaized.net/bpk-tv/Sports18_1_HD_voot_MOB/output03/index.m3u8?hdnea=exp=1742664424~acl=/*~hmac=44f4e3c1536bdc0d6cc2ed87f9b07b5f13414f66f715fa0b0bd2d3ad854e81a8&by=Bexo",
-                type: 'application/x-mpegURL',
-                logo: { file: "jaishreeram.png", hide: true, position: 'top-right' },
-                preload: 'auto'
-            });
-        }
-
-        // Close the popup
-        function closePopup() {
-            document.getElementById('customPopup').style.display = 'none';
-        }
-
-        /*** Main Initialization ***/
-        document.addEventListener("DOMContentLoaded", function () {
-            // Parse URL parameters
-            const urlParams = new URLSearchParams(window.location.search);
-
-            // Initialize content based on URL parameters
-            if (urlParams.has("id")) {
-                playVideo(urlParams.get("id"));
-            } else {
-                playDefaultVideo();
-            }
-
-            // Show the popup after 3 seconds (reduced delay)
-            setTimeout(() => {
-                document.getElementById('customPopup').style.display = 'block';
-            }, 1000); // Changed from 5000ms to 3000ms
-        });
-    </script>
-</body>
-
-</html>
+<style id="root-styles-5play-v.6.1">:root{
+	--col_bg_cat:#3BB375;
+	--col_bg_cat_h:#289B7F;
+	--homes:https://supermod.in/wp-content/themes/5play;
+	--fontasli: Manrope, Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", "Open Sans", "Helvetica Neue", sans-serif;
+	--font:'Segoe UI', sans-serif;
+	--fonts: 'Segoe UI', sans-serif;
+	--font_body_rtl: 'Kahfi', sans-serif;
+	--color_bg_cloud_rgb:#8224e3;
+	--color_bg_cloud_alt:rgba(251,252,243, 1);
+	--color_bg_cloud:rgba(20,38,54, .3);
+	--color_bg_cloud_footer: #142636;
+	--color_bg_cloud_screenshots: rgba(20,38,54, .3);
+	--color_bg_cloud_dw:rgba(20,38,54, .3);
+	--color_bg_cloud_dw_1:rgba(130,36,227, .2);
+	--color_bg_cloud_dw_2:rgba(251,252,243, 0);
+	--color_likes:#4ccb70;
+	--color_dislikes:#f9563d;
+	--color_nav_rgb:rgba(249,189,59, .3);
+	--color_nav_link:#ffffff;
+	--color_nav_link_hover:#172B3D;
+	--color_nav:#f9bd3b;
+	--color_nav_hover:#f9aa00;
+	--tcolor:#172B3D;
+	--bgcolor:#EFF7F1;
+	--color_link_menu:#000000;
+	--color_rgb_svg:rgba(76,203,112, .3);
+	--colorsvg:#4ccb70;
+	--color_svg:#4ccb70;
+	--color_svg_hover:#f9563d;
+	--color_news:#ff0000;
+	--color_updates:#37b6e5;
+	--color_mods:#1e73be;
+	--color_sosmed_icon:#008080;
+	--colorsvg_hover:#f9563d;
+	--lcolor:#999999;
+	--color_link:#999999;
+	--lhcolor:#438bd3;
+	--color_link_hover:#438bd3;
+	--color_button:#008080;
+	--color_border_button:#008080;
+	--color_button_hover:#008080;
+	--rgbacolor:#FEDE4A;
+	--rgbacolorbackground:#008080;
+	--sel-lang-active:#fff;
+	--header-bg:#ffffff;
+	--menu-hover-games:#F8B035;
+	--menu-hover-apps:#7126C1;
+	--menu-hover-top:#F74A2F;
+	--menu-hover-news:#368BE1;
+	--hmenu-more-grad:linear-gradient(90deg,rgba(23,43,61,0) 0%,rgba(23,43,61,0.05) 100%);
+	--footer-bg:#142636;
+	--main-heading:#4ccb70;
+	--dark-section-bg:#172B3D;
+	--dark-section-grad:linear-gradient(0deg,#172B3D 0%,#0F1F2E 100%);
+	--dark-circle-blur:radial-gradient(closest-side,rgba(23,43,61,0) 0,rgba(23,43,61,0.6) 50%,rgba(23,43,61,1) 94%);
+	--form-control-bg:#fff;
+	--form-control-brd:#E7E9EB;
+	--form-control-brd-f:#D0D4D8;
+	--placeholder:#8B959E;
+	--cloud-c1:#4ccb70;
+	--cloud-c2:#fbfcf3;
+	--entry-bg:#ffffff;
+	--entry-info:#4ccb70;
+	--entry-info-sep:#E6EFF4;
+	--entry-label:rgba(255,255,255,.5);
+	--entry-pattern: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='#4ccb70' d='M2,8a2,2,0,1,0,2,2A2,2,0,0,0,2,8Zm8-8a2,2,0,1,0,2,2A2,2,0,0,0,10,0Z'/%3E%3C/svg%3E");
+	--entry-pattern-d: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='#4ccb70' d='M2,8a2,2,0,1,0,2,2A2,2,0,0,0,2,8Zm8-8a2,2,0,1,0,2,2A2,2,0,0,0,10,0Z'/%3E%3C/svg%3E");
+	--block-bg:#fff;
+	--block-bg-transp:rgba(255,255,255,0);
+	--block-dark-bg:#273D52;
+	--modal-bg:#fff;
+	--cat-menu:#008080;
+	--cat-menu-h:#172B3D;
+	--spoiler:#f7f7f7;
+	--spoiler-h:#EDFAF0;
+	--searchsug:#f7f7f7;
+	--searchsug-item:#fff;
+	--nocomms:#765846;
+	--coms-meta:rgba(23,43,61,.5);
+	--coms-meta-h:rgba(23,43,61,.8);
+	--line:#EBECED;
+	--scrollbar:#F7F7F7;
+	--scrollbar-thumb:#D0D0D0;
+	--scrollbar-track:#F7F7F7;
+	--loading-bg:rgba(255,255,255,.9);
+	--spec-fade:rgba(23,41,61,1);
+	--spec-fade-transp:rgba(23,41,61,0);
+	--select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23172B3D' d='M8.12 9.29L12 13.17l3.88-3.88c.39-.39 1.02-.39 1.41 0 .39.39.39 1.02 0 1.41l-4.59 4.59c-.39.39-1.02.39-1.41 0L6.7 10.7c-.39-.39-.39-1.02 0-1.41.39-.38 1.03-.39 1.42 0z'/%3E%3C/svg%3E");
+	--pageform-img:url(https://supermod.in/wp-content/themes/5play/assets/img/page-illustation.png);
+	--pageform-img2:url(https://supermod.in/wp-content/themes/5play/assets/img/page-illustation.png);
+	--pageform-bg:#EFF7F1;
+	--opacity:1;
+	--s_yellow:#f9bd3b;
+	--s_yellow_bg_1:#FEDE4A;
+	--s_yellow_bg_2:#F8B035;
+	--s_green:#45c368;
+	--s_green_bg_1:#4CCB70;
+	--s_green_bg_2:#3DBA60;
+	--s_purple:#9248e1;
+	--s_purple_bg_1:#9B54E8;
+	--s_purple_bg_2:#7126C1;
+	--s_red:#fb614a;
+	--s_red_bg_1:#FF715C;
+	--s_red_bg_2:#F74A2F;
+	--s_blue:#37a9e4;
+	--s_blue_bg_1:;
+	--s_blue_bg_2:;
+	--homes_titles_colors:;
+	--download_icon: url(https://supermod.in/wp-content/themes/5play/assets/img/download.svg);
+	--putih :#fff;
+} 
+html.darktheme{
+	--tcolor:#ffffff;
+	--color_link_menu_dark:#ffffff;
+	--bgcolor:#172B3D;
+	--bgcolor_dark:#172B3D;
+	--sel-lang-active:#172B3D;
+	--header-bg:#2A4055;
+	--menu-hover-apps:#9A53E7;
+	--hmenu-more-grad:linear-gradient(90deg,rgba(255,255,255,0) 0%,rgba(255,255,255,0.05) 100%);
+	--footer-bg:#091521;
+	--main-heading:#4ccb70;
+	--dark-section-bg:#0F1F2E;
+	--dark-section-grad:linear-gradient(0deg,#172B3D 0%,#0F1F2E 100%);
+	--dark-circle-blur:radial-gradient(closest-side,rgba(15,31,46,0) 0,rgba(15,31,46,0.6) 50%,rgba(15,31,46,1) 94%);
+	--form-control-bg:#273D52;
+	--form-control-brd:#3D5164;
+	--form-control-brd-f:#53677B;
+	--placeholder:#687786;
+	--cloud-c1:#0F1F2E;
+	--cloud-c2:#142636;
+	--color_bg_cloud_rgb:var(--cloud-c1);
+	--color_bg_cloud_alt:var(--cloud-c2); 
+	--entry-bg:#273D52;
+	--entry-info:#939EA9;
+	--entry-info-sep:#3D5164;
+	--entry-label:rgba(39,61,82,.5);
+	--entry-pattern:var(--entry-pattern-d);
+	--block-bg:#273D52;
+	--block-bg-transp:rgba(39,61,82,0);
+	--block-dark-bg:#213548;
+	--modal-bg:#2A4055;
+	--cat-menu:rgba(76,203,112,.1);
+	--cat-menu-h:rgba(76,203,112,.2);
+	--spoiler:rgba(255,255,255,0.05);
+	--spoiler-h:rgba(255,255,255,0.1);
+	--searchsug:#2A4055;
+	--searchsug-item:rgba(255,255,255,0.05);
+	--nocomms:#fede4a;
+	--coms-meta:rgba(255,255,255,.5);
+	--coms-meta-h:rgba(255,255,255,.8);
+	--line:rgba(255,255,255,0.05);
+	--scrollbar:#2A4055;
+	--scrollbar-thumb:#0F1F2E;
+	--scrollbar-track:#2A4055;
+	--loading-bg:rgba(0,0,0,.9);
+	--spec-fade:rgba(15,31,46,1);
+	--spec-fade-transp:rgba(15,31,46,0);
+	--select-arrow:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23748390' d='M8.12 9.29L12 13.17l3.88-3.88c.39-.39 1.02-.39 1.41 0 .39.39.39 1.02 0 1.41l-4.59 4.59c-.39.39-1.02.39-1.41 0L6.7 10.7c-.39-.39-.39-1.02 0-1.41.39-.38 1.03-.39 1.42 0z'/%3E%3C/svg%3E");
+	--pageform-img:url(https://supermod.in/wp-content/themes/5play/assets/img/page-illustation-night.png);
+	--pageform-img2:url(https://supermod.in/wp-content/themes/5play/assets/img/page-illustation-night.png);
+	--pageform-bg:#0d1d2b;
+	--fonts: 'Segoe UI', sans-serif;
+	--font_body_rtl: 'Kahfi', sans-serif;
+	--homes_titles_colors_dark:;
+	--download_icon: url(https://supermod.in/wp-content/themes/5play/assets/img/download.svg);
+	--putih :#fff;
+}
+</style>
+	
+<style id="custom-style-5play-v.6.1">@charset "UTF-8";@import url('https://fonts.cdnfonts.com/css/segoe-ui-4');.showH{font-size:.93rem;line-height:1.7em}details.ac{padding:18px 0;border-bottom:0px solid #e0e7f0}details.ac:first-child{border-top:0px solid #e0e7f0}details.ac summary{font-weight:700;cursor:default;display:flex;align-items:baseline;transition: all .1s ease}details.ac summary::before{content:'\203A';flex:0 0 25px;display:flex;align-items:center;justify-content:flex-start;padding:0 5px;font-weight:400;font-size:1.33rem;color:var(--color_button)}details.ac[open] summary{color: var(--lcolor)}details.ac:not(.alt)[open] summary::before{transform:rotate(90deg);padding:0 0 0 5px;justify-content:center}details.ac.alt summary::before{content:'\002B';padding:0 2px}details.ac.alt[open] summary::before{content:'\2212'}details.ac .aC{padding:0 25px;opacity:.9}.rtl details.ac[open] summary{color: var(--lcolor)}details.ac:not(.alt)[open] summary::before{transform:rotate(-90deg);padding:0 5px 0 0 ;justify-content:center}.rtl details.ac .aC{padding:0 0 0 25px;text-align: right;}.rtl .comment-meta .group-label {margin-left: 1rem;text-align: right;}.rtl .comment-text, .rtl .comment-foot {padding-right: 5px;text-align: right;}.rtl .report-post-form, .rtl .remodal-is-initialized {text-align: right;}</style>        
+<link id="cores-style-5play-v.6.1" href="https://supermod.in/wp-content/themes/5play/assets/css/cores.styles.css" type="text/css" rel="stylesheet">
+<link id="style-5play-v.6.1" href="https://supermod.in/wp-content/themes/5play/assets/css/styles.css" type="text/css" rel="stylesheet">
+<link id="short-style-5play-v.6.1" href="https://supermod.in/wp-content/themes/5play/assets/css/short.styles.css" type="text/css" rel="stylesheet">
+<link id="fullstory-style-5play-v.6.1" href="https://supermod.in/wp-content/themes/5play/assets/css/fullstory.styles.css" type="text/css" rel="stylesheet">
+<link id="comments-style-5play-v.6.1" href="https://supermod.in/wp-content/themes/5play/assets/css/comments.styles.css" type="text/css" rel="stylesheet">
+<link id="other-style-5play-v.6.1" href="https://supermod.in/wp-content/themes/5play/assets/css/other.styles.css" type="text/css" rel="stylesheet">
+<link rel="preload" href="https://supermod.in/wp-content/themes/5play/assets/fonts/manrope-v3-cyrillic-700.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="https://supermod.in/wp-content/themes/5play/assets/fonts/manrope-v3-cyrillic-regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="https://supermod.in/wp-content/themes/5play/assets/css/cores.styles.css" as="style">
+<link rel="preload" href="https://supermod.in/wp-content/themes/5play/assets/css/styles.css" as="style">
+ 
+<style id='mobile-css-5play-v6.1'>@media (min-width:320px) and (max-width:1024px){.page-head-main{margin-top:-4.5rem!important}}@media (min-width:1025px){.page-head-main{/* margin-top:0!important */}}</style>
+ 
+<style>.oVnAB {margin-left: 24px;margin-right: 24px;padding-bottom: 20px;}@media screen and (min-width: 600px) {.oVnAB {margin-left: 48px;margin-right: 48px;}}@media screen and (min-width: 1280px) {.oVnAB {margin-left: 72px;margin-right: 72px;}}@media screen and (min-width: 1440px) {.oVnAB {margin-left: auto;margin-right: auto;max-width: 1296px;}}.kcen6d {color: #202124;fill: #202124;stop-color: #202124;font-family: "Google Sans", Helvetica, Arial, sans-serif;font-family: "Google Sans", Roboto, Arial, sans-serif;line-height: 1.5rem;font-size: 1.125rem;letter-spacing: 0;font-weight: 400;font-weight: 500;}.kcen6d:not(:disabled) {color: #202124;}.P9KVBf .kcen6d {color: #e8eaed;fill: #e8eaed;stop-color: #e8eaed;}.P9KVBf .kcen6d:not(:disabled) {color: #e8eaed;}@media screen and (min-width: 1280px) {.kcen6d {font-family: "Google Sans", Roboto, Arial, sans-serif;line-height: 1.75rem;font-size: 1.375rem;letter-spacing: 0;font-weight: 400;font-weight: 500;}}.ftgkle {--gap-width: 12px;}@media screen and (min-width: 600px) {.ftgkle {--gap-width: 16px;}.xR3GVb {--gap-width: 28px;}.b0ZfVe {padding-left: 40px;}}@media screen and (min-width: 1280px) {.ftgkle {--gap-width: 2
