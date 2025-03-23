@@ -4,60 +4,87 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Online Video Player</title>
-    <meta name="description" content="Watch videos online with our interactive video player." />
+    <title>Premium Video Player</title>
+    <meta name="description" content="Watch videos online with our premium video player." />
     <script src="https://content.jwplatform.com/libraries/SAHhwvZq.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
     <style>
-        body {
+        /* Reset and Global Styles */
+        * {
             margin: 0;
-            background-color: #181818;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #0a0a0a;
             color: #fff;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
         }
 
-        #heading-container {
-            background-color: #282828;
-            text-align: center;
-            font-size: 22px;
-            padding: 5px 40px;
-            margin: 20px auto;
-            border: 2px solid #00BFFF;
-            border-radius: 50px;
-            width: fit-content;
+        /* Container for Video Player */
+        .video-player-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+            background: linear-gradient(145deg, #1a1a1a, #0d0d0d);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
         }
 
-        #video-container {
+        /* Video Player Styling */
+        #video {
+            width: 100%;
+            height: 600px;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #000;
+        }
+
+        /* Loading Spinner */
+        .loading-spinner {
             display: flex;
             justify-content: center;
             align-items: center;
-            flex-direction: column;
-            margin: 20px;
+            height: 600px;
+            background: #000;
+            border-radius: 12px;
         }
 
-        #video {
-            width: 80%;
-            max-width: 1000px;
-            padding: 20px 40px;
-            margin: 0 auto;
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid #00bfff;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         /* Disclaimer Section */
         .disclaimer {
-            background-color: #282828;
-            color: #fff;
-            padding: 10px;
-            margin: 20px auto;
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
             text-align: center;
             font-size: 14px;
-            border: 1px solid #00BFFF;
-            border-radius: 5px;
-            width: 90%;
-            max-width: 1000px;
+            color: rgba(255, 255, 255, 0.8);
         }
 
         .disclaimer marquee {
-            color: #FF3333;
+            color: #ff3333;
         }
 
         /* Telegram Button Section */
@@ -67,31 +94,60 @@
         }
 
         .telegram-button a {
-            background-color: #00BFFF;
+            background: linear-gradient(145deg, #00bfff, #009acd);
             color: white;
-            padding: 10px 20px;
+            padding: 12px 24px;
             text-decoration: none;
-            border-radius: 5px;
+            border-radius: 8px;
             font-size: 16px;
+            font-weight: 500;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 4px 12px rgba(0, 191, 255, 0.3);
         }
 
         .telegram-button a:hover {
-            background-color: #009ACD;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 191, 255, 0.4);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .video-player-container {
+                margin: 20px;
+                padding: 15px;
+            }
+
+            #video {
+                height: 300px;
+            }
+
+            .loading-spinner {
+                height: 300px;
+            }
         }
     </style>
 </head>
 
 <body>
-    <!-- Disclaimer Section (Moved above the video player) -->
+    <!-- Video Player Container -->
+    <div class="video-player-container">
+        <!-- Loading Spinner -->
+        <div class="loading-spinner" id="loadingSpinner">
+            <div class="spinner"></div>
+        </div>
+
+        <!-- Video Player -->
+        <div id="video"></div>
+    </div>
+
+    <!-- Disclaimer Section -->
     <div class="disclaimer">
         <marquee behavior="scroll" direction="left">
             "Copyright Disclaimer: We do not stream any of the channels included in this website. All streaming links are from third-party websites freely available on the internet. All content is the copyright of its respective owners."
         </marquee>
     </div>
 
-    <div id="content"></div>
-
-    <!-- Telegram Button Section (Moved below the video player) -->
+    <!-- Telegram Button Section -->
     <div class="telegram-button">
         <a href="https://t.me/+xl-C7GFGTkM4MDk5" target="_blank">Join Telegram Channel</a>
     </div>
@@ -101,36 +157,17 @@
         function playVideo(videoId) {
             console.log("Attempting to fetch video with ID:", videoId);
 
-            // Fix: Use the correct URL format - ensure no trailing slash
-            fetch(`/api/videos/${videoId}`)
-                .then(res => {
-                    console.log("Response status:", res.status);
-                    return res.text().then(text => {
-                        // Debug: Log the raw response to see what's coming back
-                        console.log("Raw response:", text);
+            // Show loading spinner
+            document.getElementById('loadingSpinner').style.display = 'flex';
 
-                        try {
-                            // Try to parse as JSON
-                            return JSON.parse(text);
-                        } catch (e) {
-                            // If parsing fails, throw with details
-                            throw new Error(`Failed to parse response: ${e.message}. Raw response: ${text.substring(0, 100)}...`);
-                        }
-                    });
-                })
+            fetch(`/api/videos/${videoId}`)
+                .then(res => res.json())
                 .then(data => {
                     console.log("Video data received:", data);
 
                     if (!data || !data.url) {
                         throw new Error(`Video data invalid for ID "${videoId}"`);
                     }
-
-                    const videoHTML = `
-                      <div id="video-container">
-                        <div id="video"></div>
-                      </div>
-                    `;
-                    document.getElementById('content').innerHTML = videoHTML;
 
                     const videoUrl = data.requires_cors ?
                         `/api/proxy?url=${encodeURIComponent(data.url)}` :
@@ -141,53 +178,54 @@
                     jwplayer("video").setup({
                         file: videoUrl,
                         type: 'application/x-mpegURL',
-                        logo: { file: "jaishreeram.png", hide: true, position: 'top-right' },
-                        preload: 'auto',
                         autostart: false,
-                        width: "100%"
+                        width: "100%",
+                        height: "100%",
+                        skin: {
+                            name: "stormtrooper"
+                        }
+                    }).on('ready', function () {
+                        // Hide loading spinner when video is ready
+                        document.getElementById('loadingSpinner').style.display = 'none';
                     }).on('error', function (e) {
                         console.error('JWPlayer error:', e);
-                        document.getElementById('content').innerHTML +=
-                            `<div style="color:red;text-align:center;margin-top:20px;">
-                            Error playing video: ${e.message}
-                        </div>`;
+                        document.getElementById('loadingSpinner').style.display = 'none';
+                        alert('Error playing video. Please try again later.');
                     });
                 })
                 .catch(err => {
                     console.error('Error fetching or playing video:', err);
-                    document.getElementById('content').innerHTML =
-                        `<div style="text-align:center;margin-top:100px;">
-                        <h2>Error loading video</h2>
-                        <p>Could not load video for ID "${videoId}"</p>
-                        <p>Error: ${err.message}</p>
-                        <a href="/" style="color:#00BFFF;">Back to home</a>
-                    </div>`;
+                    document.getElementById('loadingSpinner').style.display = 'none';
+                    alert('Error loading video. Please check the video ID and try again.');
                 });
         }
 
         // Play default video if no video ID is provided
         function playDefaultVideo() {
-            const videoHTML = `
-                  <div id="video-container">
-                    <div id="video"></div>
-                  </div>
-                `;
-            document.getElementById('content').innerHTML = videoHTML;
+            document.getElementById('loadingSpinner').style.display = 'flex';
 
             jwplayer("video").setup({
                 file: "https://v18tataplaysyndication.akamaized.net/bpk-tv/Sports18_1_HD_voot_MOB/output03/index.m3u8?hdnea=exp=1742725039~acl=/*~hmac=35982c0d00bbf7546da8565e25fb3037333a324bdb3bf5b0d4d8f2de7292fdeb&by=Bexo",
                 type: 'application/x-mpegURL',
-                logo: { file: "jaishreeram.png", hide: true, position: 'top-right' },
-                preload: 'auto'
+                autostart: false,
+                width: "100%",
+                height: "100%",
+                skin: {
+                    name: "stormtrooper"
+                }
+            }).on('ready', function () {
+                document.getElementById('loadingSpinner').style.display = 'none';
+            }).on('error', function (e) {
+                console.error('JWPlayer error:', e);
+                document.getElementById('loadingSpinner').style.display = 'none';
+                alert('Error playing video. Please try again later.');
             });
         }
 
         /*** Main Initialization ***/
         document.addEventListener("DOMContentLoaded", function () {
-            // Parse URL parameters
             const urlParams = new URLSearchParams(window.location.search);
 
-            // Initialize content based on URL parameters
             if (urlParams.has("id")) {
                 playVideo(urlParams.get("id"));
             } else {
