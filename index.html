@@ -26,6 +26,12 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        body.light-theme {
+            background: linear-gradient(135deg, #f5f5f5, #e0e0e0);
+            color: #333;
         }
 
         /* Video Player Container */
@@ -39,6 +45,12 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
             overflow: hidden;
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        body.light-theme .video-player-container {
+            background: rgba(255, 255, 255, 0.8);
+            border-color: rgba(0, 0, 0, 0.1);
         }
 
         /* Video Player Styling */
@@ -76,6 +88,74 @@
             }
         }
 
+        /* Live Viewer Counter */
+        .live-counter {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .live-counter::before {
+            content: '';
+            width: 10px;
+            height: 10px;
+            background: red;
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7);
+            }
+
+            70% {
+                box-shadow: 0 0 0 10px rgba(255, 0, 0, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(255, 0, 0, 0);
+            }
+        }
+
+        /* Theme Toggle Button */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .theme-toggle svg {
+            width: 24px;
+            height: 24px;
+            fill: #fff;
+        }
+
+        body.light-theme .theme-toggle svg {
+            fill: #333;
+        }
+
         /* Disclaimer Section */
         .disclaimer {
             margin: 20px auto;
@@ -89,6 +169,13 @@
             color: rgba(255, 255, 255, 0.8);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        body.light-theme .disclaimer {
+            background: rgba(255, 255, 255, 0.8);
+            border-color: rgba(0, 0, 0, 0.1);
+            color: #333;
         }
 
         .disclaimer marquee {
@@ -140,6 +227,18 @@
 </head>
 
 <body>
+    <!-- Theme Toggle Button -->
+    <button class="theme-toggle" id="themeToggle">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M12 18c-3.309 0-6-2.691-6-6s2.691-6 6-6 6 2.691 6 6-2.691 6-6 6zm0-10c-2.206 0-4 1.794-4 4s1.794 4 4 4 4-1.794 4-4-1.794-4-4-4zM12 4c-1.103 0-2 .897-2 2s.897 2 2 2 2-.897 2-2-.897-2-2-2zM12 20c-1.103 0-2 .897-2 2s.897 2 2 2 2-.897 2-2-.897-2-2-2z" />
+        </svg>
+    </button>
+
+    <!-- Live Viewer Counter -->
+    <div class="live-counter" id="liveCounter">
+        <span id="viewerCount">0</span> Viewers Live
+    </div>
+
     <!-- Video Player Container -->
     <div class="video-player-container">
         <!-- Loading Spinner -->
@@ -170,6 +269,23 @@
     </div>
 
     <script>
+        // Live Viewer Counter
+        let viewerCount = 0;
+        const liveCounter = document.getElementById('liveCounter');
+
+        function updateViewerCount() {
+            viewerCount += Math.floor(Math.random() * 5); // Simulate live viewers
+            document.getElementById('viewerCount').textContent = viewerCount;
+        }
+
+        setInterval(updateViewerCount, 5000); // Update every 5 seconds
+
+        // Theme Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('light-theme');
+        });
+
         // Play video with given ID
         function playVideo(videoId) {
             console.log("Attempting to fetch video with ID:", videoId);
