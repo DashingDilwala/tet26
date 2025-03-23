@@ -270,15 +270,35 @@
 
     <script>
         // Live Viewer Counter
-        let viewerCount = 0;
+        let viewerCount = parseInt(localStorage.getItem('viewerCount')) || 0;
         const liveCounter = document.getElementById('liveCounter');
 
-        function updateViewerCount() {
-            viewerCount += Math.floor(Math.random() * 5); // Simulate live viewers
+        // Increment counter when a new user opens the page
+        function incrementViewerCount() {
+            viewerCount += 1;
+            localStorage.setItem('viewerCount', viewerCount);
             document.getElementById('viewerCount').textContent = viewerCount;
         }
 
-        setInterval(updateViewerCount, 5000); // Update every 5 seconds
+        // Decrement counter when a user leaves the page
+        function decrementViewerCount() {
+            viewerCount -= 1;
+            if (viewerCount < 0) viewerCount = 0; // Ensure count doesn't go below 0
+            localStorage.setItem('viewerCount', viewerCount);
+        }
+
+        // Update the counter display
+        function updateViewerCountDisplay() {
+            document.getElementById('viewerCount').textContent = viewerCount;
+        }
+
+        // Increment counter on page load
+        incrementViewerCount();
+
+        // Decrement counter when the user leaves
+        window.addEventListener('beforeunload', () => {
+            decrementViewerCount();
+        });
 
         // Theme Toggle
         const themeToggle = document.getElementById('themeToggle');
@@ -364,6 +384,9 @@
             } else {
                 playDefaultVideo();
             }
+
+            // Initialize viewer count display
+            updateViewerCountDisplay();
         });
     </script>
 </body>
