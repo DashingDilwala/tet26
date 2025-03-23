@@ -88,44 +88,6 @@
             }
         }
 
-        /* Live Viewer Counter */
-        .live-counter {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .live-counter::before {
-            content: '';
-            width: 10px;
-            height: 10px;
-            background: red;
-            border-radius: 50%;
-            animation: pulse 1.5s infinite;
-        }
-
-        @keyframes pulse {
-            0% {
-                box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7);
-            }
-
-            70% {
-                box-shadow: 0 0 0 10px rgba(255, 0, 0, 0);
-            }
-
-            100% {
-                box-shadow: 0 0 0 0 rgba(255, 0, 0, 0);
-            }
-        }
-
         /* Theme Toggle Button */
         .theme-toggle {
             position: fixed;
@@ -140,6 +102,7 @@
             align-items: center;
             justify-content: center;
             transition: background 0.3s ease;
+            z-index: 1000;
         }
 
         .theme-toggle:hover {
@@ -208,6 +171,49 @@
             box-shadow: 0 6px 16px rgba(0, 191, 255, 0.4);
         }
 
+        /* Quality Buttons */
+        .quality-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .quality-button {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+
+        .quality-button.active {
+            background: #00bfff;
+            border-color: #00bfff;
+            color: #fff;
+        }
+
+        .quality-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        body.light-theme .quality-button {
+            background: rgba(0, 0, 0, 0.1);
+            border-color: rgba(0, 0, 0, 0.2);
+            color: #333;
+        }
+
+        body.light-theme .quality-button.active {
+            background: #009acd;
+            border-color: #009acd;
+            color: #fff;
+        }
+
         /* Responsive Design */
         @media (max-width: 768px) {
             .video-player-container {
@@ -234,11 +240,6 @@
         </svg>
     </button>
 
-    <!-- Live Viewer Counter -->
-    <div class="live-counter" id="liveCounter">
-        <span id="viewerCount">0</span> Viewers Live
-    </div>
-
     <!-- Video Player Container -->
     <div class="video-player-container">
         <!-- Loading Spinner -->
@@ -248,6 +249,12 @@
 
         <!-- Video Player -->
         <div id="video"></div>
+    </div>
+
+    <!-- Quality Buttons -->
+    <div class="quality-buttons">
+        <button id="hdButton" class="quality-button active">HD Quality</button>
+        <button id="sdButton" class="quality-button">SD Quality</button>
     </div>
 
     <!-- Disclaimer Section -->
@@ -269,96 +276,16 @@
     </div>
 
     <script>
-        // Live Viewer Counter
-        let viewerCount = parseInt(localStorage.getItem('viewerCount')) || 0;
-        const liveCounter = document.getElementById('liveCounter');
+        // Define stream URLs
+        const hdStreamUrl = "https://v18tataplaysyndication.akamaized.net/bpk-tv/Sports18_1_HD_voot_MOB/output03/index.m3u8?hdnea=exp=1742736468~acl=/*~hmac=077e55538282153869f349eb01de9b35c6ada14068448cc77560d3eb2b666f39&by=Bexo";
+        const sdStreamUrl = "https://v18tataplaysyndication.akamaized.net/bpk-tv/Sports18_1_HD_voot_MOB/output03/index.m3u8?hdnea=exp=1742733220~acl=/*~hmac=8a915461ca7185c35a320d7708e6f1c1eb5494f24a7d4bdd7ed85fd41353d0f6";
 
-        // Increment counter when a new user opens the page
-        function incrementViewerCount() {
-            viewerCount += 1;
-            localStorage.setItem('viewerCount', viewerCount);
-            document.getElementById('viewerCount').textContent = viewerCount;
-        }
-
-        // Decrement counter when a user leaves the page
-        function decrementViewerCount() {
-            viewerCount -= 1;
-            if (viewerCount < 0) viewerCount = 0; // Ensure count doesn't go below 0
-            localStorage.setItem('viewerCount', viewerCount);
-        }
-
-        // Update the counter display
-        function updateViewerCountDisplay() {
-            document.getElementById('viewerCount').textContent = viewerCount;
-        }
-
-        // Increment counter on page load
-        incrementViewerCount();
-
-        // Decrement counter when the user leaves
-        window.addEventListener('beforeunload', () => {
-            decrementViewerCount();
-        });
-
-        // Theme Toggle
-        const themeToggle = document.getElementById('themeToggle');
-        themeToggle.addEventListener('click', () => {
-            document.body.classList.toggle('light-theme');
-        });
-
-        // Play video with given ID
-        function playVideo(videoId) {
-            console.log("Attempting to fetch video with ID:", videoId);
-
-            // Show loading spinner
-            document.getElementById('loadingSpinner').style.display = 'flex';
-
-            fetch(`/api/videos/${videoId}`)
-                .then(res => res.json())
-                .then(data => {
-                    console.log("Video data received:", data);
-
-                    if (!data || !data.url) {
-                        throw new Error(`Video data invalid for ID "${videoId}"`);
-                    }
-
-                    const videoUrl = data.requires_cors ?
-                        `/api/proxy?url=${encodeURIComponent(data.url)}` :
-                        data.url;
-
-                    console.log("Using video URL:", videoUrl);
-
-                    jwplayer("video").setup({
-                        file: videoUrl,
-                        type: 'application/x-mpegURL',
-                        autostart: false,
-                        width: "100%",
-                        height: "100%",
-                        skin: {
-                            name: "stormtrooper"
-                        }
-                    }).on('ready', function () {
-                        // Hide loading spinner when video is ready
-                        document.getElementById('loadingSpinner').style.display = 'none';
-                    }).on('error', function (e) {
-                        console.error('JWPlayer error:', e);
-                        document.getElementById('loadingSpinner').style.display = 'none';
-                        alert('Error playing video. Please try again later.');
-                    });
-                })
-                .catch(err => {
-                    console.error('Error fetching or playing video:', err);
-                    document.getElementById('loadingSpinner').style.display = 'none';
-                    alert('Error loading video. Please check the video ID and try again.');
-                });
-        }
-
-        // Play default video if no video ID is provided
-        function playDefaultVideo() {
+        // Function to load a stream
+        function loadStream(streamUrl) {
             document.getElementById('loadingSpinner').style.display = 'flex';
 
             jwplayer("video").setup({
-                file: "https://airplay.bgrid.in/IPTVS/live/voot/1033.m3u8",
+                file: streamUrl,
                 type: 'application/x-mpegURL',
                 autostart: false,
                 width: "100%",
@@ -375,18 +302,26 @@
             });
         }
 
-        /*** Main Initialization ***/
-        document.addEventListener("DOMContentLoaded", function () {
-            const urlParams = new URLSearchParams(window.location.search);
+        // Load HD stream by default
+        loadStream(hdStreamUrl);
 
-            if (urlParams.has("id")) {
-                playVideo(urlParams.get("id"));
-            } else {
-                playDefaultVideo();
-            }
+        // Add event listeners for HD and SD buttons
+        document.getElementById('hdButton').addEventListener('click', () => {
+            loadStream(hdStreamUrl);
+            document.getElementById('hdButton').classList.add('active');
+            document.getElementById('sdButton').classList.remove('active');
+        });
 
-            // Initialize viewer count display
-            updateViewerCountDisplay();
+        document.getElementById('sdButton').addEventListener('click', () => {
+            loadStream(sdStreamUrl);
+            document.getElementById('sdButton').classList.add('active');
+            document.getElementById('hdButton').classList.remove('active');
+        });
+
+        // Theme Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('light-theme');
         });
     </script>
 </body>
