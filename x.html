@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Stream Player</title>
+    <script src="https://cdn.dashjs.org/latest/dash.all.min.js"></script>
+    <style>
+        body {
+            text-align: center;
+            background-color: #000;
+            color: white;
+        }
+        video {
+            width: 80%;
+            max-width: 800px;
+            height: auto;
+            border: 2px solid white;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Live Stream - STAR SPORTS 1 HINDI HD</h2>
+    <video id="videoPlayer" controls autoplay></video>
+
+    <script>
+        (function() {
+            var url = "https://dj-tm-srvr1.vercel.app/title/STAR_SPORTS_1_HINDI-HD@DJ-TM.mpd?data=0y7KCy8MSQ0IKLTMtdQvyk9P8QwpKzX2DQnMzSnwdAs3dcv2qkgtC_EJcw4LdDGzMI3SNgvMMDHIqyrx8ysM8_DxSnHMck8sK660DHLx9gvM8ksKyE4qcAQA";
+            var video = document.querySelector("#videoPlayer");
+            var player = dashjs.MediaPlayer().create();
+            player.initialize(video, url, true);
+        })();
+    </script>
+
+</body>
+</html>
