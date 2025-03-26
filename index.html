@@ -119,19 +119,11 @@
   </div>
 
   <script>
-    // Configuration
-    const config = {
-      // Replace with your actual stream URL (encoded for security)
-      videoUrl: atob("aHR0cHM6Ly9saXZlLmJncmlkLmluL2FydGh1ci9tYXN0ZXIubTN1OA=="),
-      
-      // JW Player License Key (get yours from dashboard)
-      licenseKey: "YOUR_LICENSE_KEY" 
-    };
-    
-    // Initialize JW Player
+    // Initialize JW Player (No license key needed)
     function initPlayer() {
       const player = jwplayer("jw-player").setup({
-        file: config.videoUrl,
+        // Your stream URL (encoded for basic obscurity)
+        file: atob("aHR0cHM6Ly9saXZlLmJncmlkLmluL2FydGh1ci9tYXN0ZXIubTN1OA=="),
         width: "100%",
         aspectratio: "16:9",
         autostart: true,
@@ -140,12 +132,6 @@
         displaytitle: false,
         logo: {
           hide: true
-        },
-        skin: {
-          name: "stormtrooper",
-          active: "#00aced",
-          inactive: "#ffffff",
-          background: "rgba(0,0,0,0.7)"
         }
       });
       
@@ -154,6 +140,13 @@
         player.setMute(false);
         const playButton = document.querySelector('.jw-icon-display');
         if(playButton) playButton.click();
+      });
+      
+      // Handle mobile devices better
+      player.on('ready', () => {
+        if(/Android|iPhone|iPad/i.test(navigator.userAgent)) {
+          player.setControls(true);
+        }
       });
       
       return player;
@@ -168,11 +161,6 @@
         document.body.classList.toggle('dark-mode', isDark);
         toggle.textContent = isDark ? '☀️' : '🌙';
         localStorage.setItem('theme', isDark ? 'dark' : 'light');
-        
-        // Update player controls for dark mode
-        if(window.jwplayer) {
-          jwplayer().setControls(isDark);
-        }
       }
       
       // Initialize theme
@@ -181,11 +169,6 @@
       // Toggle handler
       toggle.addEventListener('click', () => {
         setTheme(!document.body.classList.contains('dark-mode'));
-      });
-      
-      // System theme listener
-      prefersDark.addListener(e => {
-        if(!localStorage.getItem('theme')) setTheme(e.matches);
       });
     }
     
