@@ -3,16 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Video Player</title>
   <script src="https://content.jwplatform.com/libraries/KB5zFt7A.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+    
     body {
       margin: 0;
       padding: 0;
-      font-family: Arial, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       transition: background-color 0.3s, color 0.3s;
+      overscroll-behavior: contain;
     }
     
     .dark-mode {
@@ -21,23 +27,32 @@
     }
     
     .container {
-      max-width: 1200px;
+      max-width: 100%;
+      padding: 15px;
       margin: 0 auto;
-      padding: 20px;
+      padding-top: 60px; /* Prevents theme button overlap */
     }
     
-    /* Video Player (Normal Size) */
-    #video {
+    /* Fixed 16:9 Player */
+    .player-container {
       width: 100%;
-      aspectratio: 16:9;
+      position: relative;
       margin-bottom: 20px;
     }
     
-    /* Theme Toggle (Top-Right Corner) */
+    #video {
+      width: 100%;
+      height: 0;
+      padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+      position: relative;
+      background: #000;
+    }
+    
+    /* Theme Toggle (Non-overlapping) */
     .theme-toggle-container {
       position: fixed;
-      top: 20px;
-      right: 20px;
+      top: 15px;
+      right: 15px;
       z-index: 1000;
     }
     
@@ -58,13 +73,16 @@
     
     .dark-mode .theme-toggle {
       background: rgba(255, 255, 255, 0.2);
+      color: white;
     }
     
-    .theme-toggle:hover {
-      transform: scale(1.1);
+    /* Telegram Button */
+    .controls {
+      display: flex;
+      justify-content: center;
+      padding: 10px 0;
     }
     
-    /* Telegram Button (Improved Styling) */
     .telegram-btn {
       display: inline-flex;
       align-items: center;
@@ -75,83 +93,84 @@
       padding: 12px 24px;
       border-radius: 50px;
       font-weight: bold;
+      font-size: 16px;
       box-shadow: 0 4px 10px rgba(0, 136, 204, 0.3);
       transition: all 0.3s;
-      margin-top: 20px;
     }
     
     .telegram-btn:hover {
-      background: linear-gradient(135deg, #0077b5, #0095d9);
       transform: translateY(-2px);
       box-shadow: 0 6px 15px rgba(0, 136, 204, 0.4);
     }
     
-    .controls {
-      display: flex;
-      justify-content: center;
+    @media (max-width: 480px) {
+      .telegram-btn {
+        padding: 10px 20px;
+      }
     }
   </style>
 </head>
 <body class="light-mode">
-  <!-- Theme Toggle (Top-Right) -->
+  <!-- Theme Toggle (Fixed Position) -->
   <div class="theme-toggle-container">
     <button class="theme-toggle" id="themeToggle">🌙</button>
   </div>
 
   <div class="container">
-    <!-- Video Player -->
-    <div id="video"></div>
+    <!-- Player Container (Proper 16:9) -->
+    <div class="player-container">
+      <div id="video"></div>
+    </div>
     
-    <!-- Telegram Button (Centered) -->
+    <!-- Telegram Button -->
     <div class="controls">
-      <a href="https://t.me/yourtelegram" class="telegram-btn" target="_blank">
+      <a href="https://t.me/yourtelegram" class="telegram-btn" target="_blank" rel="noopener">
         <i class="fab fa-telegram"></i> Join Telegram
       </a>
     </div>
   </div>
 
-  <script type="text/javascript">
-    // Function to get video URL from the domain
+  <script>
+    // Initialize player with proper 16:9 ratio
+    function initPlayer() {
+      jwplayer("video").setup({
+        width: "100%",
+        aspectratio: "16:9",
+        autostart: true,
+        mute: false,
+        file: getVideoUrlFromDomain()
+      });
+    }
+    
     function getVideoUrlFromDomain() {
       const urlParams = new URLSearchParams(window.location.search);
-      return urlParams.get('videoUrl');
-    }
-
-    // Initialize video player (UNMUTED)
-    jwplayer("video").setup({
-      width: "100%",
-      aspectratio: "16:9",
-      autostart: true,
-      mute: false, // Force unmuted (browser may still block autoplay with sound)
-      file: getVideoUrlFromDomain()
-    });
-
-    // Theme toggle functionality
-    const themeToggle = document.getElementById('themeToggle');
-    const body = document.body;
-    
-    // Check saved theme or system preference
-    const savedTheme = localStorage.getItem('theme') || 
-                      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-    
-    if (savedTheme === 'dark') {
-      body.classList.add('dark-mode');
-      themeToggle.textContent = '☀️';
-    } else {
-      body.classList.remove('dark-mode');
-      themeToggle.textContent = '🌙';
+      return urlParams.get('videoUrl') || "";
     }
     
-    themeToggle.addEventListener('click', () => {
-      if (body.classList.contains('dark-mode')) {
-        body.classList.remove('dark-mode');
-        themeToggle.textContent = '🌙';
-        localStorage.setItem('theme', 'light');
-      } else {
-        body.classList.add('dark-mode');
-        themeToggle.textContent = '☀️';
-        localStorage.setItem('theme', 'dark');
+    // Theme management
+    function setupTheme() {
+      const toggle = document.getElementById('themeToggle');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+      
+      function setTheme(isDark) {
+        document.body.classList.toggle('dark-mode', isDark);
+        toggle.textContent = isDark ? '☀️' : '🌙';
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
       }
+      
+      // Initialize theme
+      setTheme(localStorage.getItem('theme') === 'dark' || prefersDark.matches);
+      
+      // Toggle handler
+      toggle.addEventListener('click', () => {
+        setTheme(!document.body.classList.contains('dark-mode'));
+      });
+    }
+    
+    // Start everything
+    document.addEventListener('DOMContentLoaded', function() {
+      initPlayer();
+      setupTheme();
     });
   </script>
 </body>
