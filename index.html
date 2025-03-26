@@ -6,9 +6,109 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Video Player</title>
   <script src="https://content.jwplatform.com/libraries/KB5zFt7A.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    
+    .dark-mode {
+      background-color: #121212;
+      color: #ffffff;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    /* Video Player (Normal Size) */
+    #video {
+      width: 100%;
+      aspectratio: 16:9;
+      margin-bottom: 20px;
+    }
+    
+    /* Theme Toggle (Top-Right Corner) */
+    .theme-toggle-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+    }
+    
+    .theme-toggle {
+      background: rgba(0, 0, 0, 0.2);
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+    }
+    
+    .dark-mode .theme-toggle {
+      background: rgba(255, 255, 255, 0.2);
+    }
+    
+    .theme-toggle:hover {
+      transform: scale(1.1);
+    }
+    
+    /* Telegram Button (Improved Styling) */
+    .telegram-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, #0088cc, #00aced);
+      color: white;
+      text-decoration: none;
+      padding: 12px 24px;
+      border-radius: 50px;
+      font-weight: bold;
+      box-shadow: 0 4px 10px rgba(0, 136, 204, 0.3);
+      transition: all 0.3s;
+      margin-top: 20px;
+    }
+    
+    .telegram-btn:hover {
+      background: linear-gradient(135deg, #0077b5, #0095d9);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(0, 136, 204, 0.4);
+    }
+    
+    .controls {
+      display: flex;
+      justify-content: center;
+    }
+  </style>
 </head>
-<body>
-  <div id="video"></div>
+<body class="light-mode">
+  <!-- Theme Toggle (Top-Right) -->
+  <div class="theme-toggle-container">
+    <button class="theme-toggle" id="themeToggle">🌙</button>
+  </div>
+
+  <div class="container">
+    <!-- Video Player -->
+    <div id="video"></div>
+    
+    <!-- Telegram Button (Centered) -->
+    <div class="controls">
+      <a href="https://t.me/yourtelegram" class="telegram-btn" target="_blank">
+        <i class="fab fa-telegram"></i> Join Telegram
+      </a>
+    </div>
+  </div>
 
   <script type="text/javascript">
     // Function to get video URL from the domain
@@ -17,12 +117,41 @@
       return urlParams.get('videoUrl');
     }
 
+    // Initialize video player (UNMUTED)
     jwplayer("video").setup({
       width: "100%",
-      height: "100%",
+      aspectratio: "16:9",
       autostart: true,
-      mute: false,
+      mute: false, // Force unmuted (browser may still block autoplay with sound)
       file: getVideoUrlFromDomain()
+    });
+
+    // Theme toggle functionality
+    const themeToggle = document.getElementById('themeToggle');
+    const body = document.body;
+    
+    // Check saved theme or system preference
+    const savedTheme = localStorage.getItem('theme') || 
+                      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    
+    if (savedTheme === 'dark') {
+      body.classList.add('dark-mode');
+      themeToggle.textContent = '☀️';
+    } else {
+      body.classList.remove('dark-mode');
+      themeToggle.textContent = '🌙';
+    }
+    
+    themeToggle.addEventListener('click', () => {
+      if (body.classList.contains('dark-mode')) {
+        body.classList.remove('dark-mode');
+        themeToggle.textContent = '🌙';
+        localStorage.setItem('theme', 'light');
+      } else {
+        body.classList.add('dark-mode');
+        themeToggle.textContent = '☀️';
+        localStorage.setItem('theme', 'dark');
+      }
     });
   </script>
 </body>
