@@ -20,15 +20,16 @@
     
     iframe {
       width: 100%;
-      height: 450px;
+      height: 380px;  /* Reduced from 450px to 380px */
       border: none;
       border-radius: 8px;
       box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      margin-bottom: 10px; /* Added space below iframe */
     }
     
     .telegram-button {
       text-align: center;
-      margin-top: 20px;
+      margin-top: 15px; /* Adjusted margin */
     }
     
     .telegram-button a {
@@ -51,7 +52,7 @@
     }
     
     .disclaimer {
-      margin-top: 30px;
+      margin-top: 20px; /* Reduced margin */
       padding: 10px;
       background-color: #000;
       color: white;
@@ -67,19 +68,22 @@
 </head>
 <body>
   <div class="player-container">
+    <!-- Video Player with reduced height -->
     <iframe 
       sandbox="allow-scripts allow-same-origin" 
-      src="https://live.starsports.news/lunar-ipl-hindi" 
+      src="https://iframv2.embedxt.site/iframe/frame.php" 
       title="video player" 
       frameborder="0" 
       scrolling="no" 
       allow="accelerometer; fullscreen; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share">
     </iframe>
     
+    <!-- Telegram Button -->
     <div class="telegram-button">
       <a href="https://telegram.me/cricketguru071" target="_blank" rel="noopener noreferrer">Join Telegram Channel</a>
     </div>
     
+    <!-- Disclaimer -->
     <div class="disclaimer">
       <marquee behavior="scroll" direction="left">
         "Copyright Disclaimer: We do not stream any of the channels included in this website. All streaming links are from third-party websites freely available on the internet. All content is the copyright of its respective owners."
@@ -88,7 +92,7 @@
   </div>
 
   <script>
-    // Improved anti-embedding with fallback
+    // Anti-embedding script
     if (window.top !== window.self) {
       try {
         window.top.location.href = window.location.href;
@@ -96,18 +100,6 @@
         window.location.href = "https://telegram.me/cricketguru071";
       }
     }
-    
-    // Alternative Telegram URL handling
-    document.querySelector('.telegram-button a').addEventListener('click', function(e) {
-      // Try opening Telegram app directly first
-      try {
-        window.open('tg://resolve?domain=cricketguru071', '_blank');
-        e.preventDefault();
-      } catch (err) {
-        // Fallback to web version
-        return true;
-      }
-    });
   </script>
 </body>
 </html>
