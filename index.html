@@ -1,0 +1,232 @@
+<html lang="en">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZF6N5D1RHG"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZF6N5D1RHG');
+  </script>
+  <meta charset="UTF-8">
+  <title>Advanced Stream Player</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="//content.jwplatform.com/libraries/SAHhwvZq.js"></script>
+  <style>
+    body {
+      margin: 0;
+      background: #000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+    }
+    
+    /* 16:9 Player Container */
+    #playerContainer {
+      width: 100%;
+      max-width: 1200px;
+      position: relative;
+    }
+    
+    #jwplayerDiv {
+      width: 100%;
+      aspect-ratio: 16/9;
+      background: #000;
+    }
+    
+    /* Telegram Button */
+    .telegram-btn-container {
+      width: 100%;
+      max-width: 1200px;
+      text-align: center;
+      padding: 15px 0;
+    }
+    
+    .telegram-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: #0088cc;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+    
+    .telegram-btn:hover {
+      background: #0077b3;
+    }
+    
+    .telegram-btn img {
+      width: 20px;
+      height: 20px;
+    }
+    
+    /* Status Messages */
+    .status-message {
+      color: white;
+      text-align: center;
+      padding: 20px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    
+    .error {
+      color: #ff4444;
+    }
+    
+    .warning {
+      color: #ffcc00;
+    }
+    
+    /* Debug Info */
+    #debugInfo {
+      color: #aaa;
+      font-size: 12px;
+      padding: 10px;
+      max-width: 800px;
+      margin: 0 auto;
+      word-break: break-all;
+    }
+  </style>
+</head>
+<body>
+  <div id="playerContainer">
+    <div id="jwplayerDiv"></div>
+    <div id="statusMessage" class="status-message"></div>
+    <div id="debugInfo"></div>
+  </div>
+  
+  <div class="telegram-btn-container">
+    <a href="https://t.me/+BmE5rLoq3ic1MDcx" target="_blank" class="telegram-btn">
+      <img src="https://telegram.org/img/t_logo.png" alt="Telegram">
+      Join Our Telegram Channel
+    </a>
+  </div>
+
+  <script>
+    // Debugging function
+    function debugLog(message) {
+      const debugDiv = document.getElementById('debugInfo');
+      debugDiv.innerHTML += `${new Date().toLocaleTimeString()}: ${message}<br>`;
+      console.log(message);
+    }
+
+    function getQueryParam(name) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(name);
+    }
+
+    function setStatus(message, type = 'info') {
+      const statusDiv = document.getElementById('statusMessage');
+      statusDiv.textContent = message;
+      statusDiv.className = `status-message ${type}`;
+    }
+
+    function loadVideo() {
+      const videoUrl = getQueryParam("url");
+      
+      if (!videoUrl) {
+        setStatus("No stream URL provided. Add ?url=YOUR_STREAM_URL to the address", "warning");
+        return;
+      }
+
+      debugLog(`Attempting to load: ${videoUrl}`);
+      
+      try {
+        const playerInstance = jwplayer("jwplayerDiv").setup({ 
+          file: videoUrl, 
+          autostart: true,
+          stretching: "uniform",
+          width: "100%",
+          aspectratio: "16:9",
+          crossorigin: "anonymous",
+          type: detectStreamType(videoUrl),
+          mute: false
+        });
+
+        playerInstance.on('ready', () => {
+          setStatus("Stream loaded successfully");
+          debugLog("JW Player ready event fired");
+        });
+
+        playerInstance.on('error', (e) => {
+          setStatus(`Playback error: ${e.message}`, "error");
+          debugLog(`JW Player error: ${JSON.stringify(e)}`);
+          
+          // Attempt fallback for HLS streams
+          if (videoUrl.includes('.m3u8')) {
+            attemptHLSFallback(videoUrl);
+          }
+        });
+
+        playerInstance.on('setupError', (e) => {
+          setStatus(`Setup error: ${e.message}`, "error");
+          debugLog(`JW Player setup error: ${JSON.stringify(e)}`);
+        });
+
+      } catch (e) {
+        setStatus(`Player initialization failed: ${e.message}`, "error");
+        debugLog(`Initialization error: ${e.stack}`);
+      }
+    }
+
+    function detectStreamType(url) {
+      if (url.includes('.m3u8')) return 'hls';
+      if (url.includes('.mpd')) return 'dash';
+      if (url.includes('.mp4') || url.includes('.webm')) return 'mp4';
+      return 'hls'; // Default assumption
+    }
+
+    function attemptHLSFallback(hlsUrl) {
+      debugLog("Attempting HLS.js fallback...");
+      setStatus("Trying alternative player...", "warning");
+      
+      // Dynamically load HLS.js library
+      const script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/hls.js@latest';
+      script.onload = () => {
+        if (Hls.isSupported()) {
+          const videoElement = document.createElement('video');
+          videoElement.controls = true;
+          videoElement.style.width = '100%';
+          videoElement.style.aspectRatio = '16/9';
+          document.getElementById('jwplayerDiv').replaceChildren(videoElement);
+          
+          const hls = new Hls();
+          hls.loadSource(hlsUrl);
+          hls.attachMedia(videoElement);
+          hls.on(Hls.Events.MANIFEST_PARSED, () => {
+            videoElement.play();
+            setStatus("Playing stream using HLS.js");
+            debugLog("HLS.js playback started successfully");
+          });
+          hls.on(Hls.Events.ERROR, (event, data) => {
+            setStatus(`HLS Error: ${data.type} - ${data.details}`, "error");
+            debugLog(`HLS.js error: ${JSON.stringify(data)}`);
+          });
+        } else {
+          setStatus("HLS.js not supported in this browser", "error");
+          debugLog("HLS.js not supported");
+        }
+      };
+      script.onerror = () => {
+        setStatus("Failed to load HLS.js library", "error");
+        debugLog("Failed to load HLS.js");
+      };
+      document.head.appendChild(script);
+    }
+
+    // Initialize when page loads
+    document.addEventListener("DOMContentLoaded", () => {
+      debugLog("Page loaded, initializing player...");
+      loadVideo();
+    });
+  </script>
+</body>
+</html>
