@@ -3,746 +3,224 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Premium M3U8 Player</title>
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <title>ANONYMOUS DEVELOPER PLAYER</title>
     <style>
-        :root {
-            --primary: #6200ee;
-            --primary-dark: #3700b3;
-            --secondary: #03dac6;
-            --background: #121212;
-            --surface: #1e1e1e;
-            --error: #cf6679;
-            --on-primary: #ffffff;
-            --on-secondary: #000000;
-            --on-background: #ffffff;
-            --on-surface: #ffffff;
-            --on-error: #000000;
-        }
-        
+        /* General Page Styling */
         body {
-            font-family: 'Roboto', sans-serif;
-            background-color: var(--background);
-            color: var(--on-background);
+            font-family: 'Arial', sans-serif;
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            background: linear-gradient(135deg, #242424, #3b5998);
+            color: #fff;
             display: flex;
+            flex-direction: column;
+            align-items: center;
             justify-content: center;
-            align-items: center;
             min-height: 100vh;
+            text-align: center;
         }
-        
+
+        /* Glowing Effect for Message */
+        .loading-message {
+            font-size: 18px;
+            font-weight: bold;
+            color: #ffcc00;
+            margin-bottom: 10px;
+            padding: 10px 20px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+            box-shadow: 0 0 10px #ffcc00, 0 0 20px #ffcc00, 0 0 30px #ffcc00;
+            animation: glow 1.5s infinite alternate;
+        }
+
+        @keyframes glow {
+            0% { box-shadow: 0 0 10px #ffcc00, 0 0 20px #ffcc00, 0 0 30px #ffcc00; }
+            100% { box-shadow: 0 0 15px #ffcc00, 0 0 25px #ffcc00, 0 0 35px #ffcc00; }
+        }
+
+        /* 16:9 Player Container */
         .player-container {
-            width: 100%;
-            max-width: 1000px;
-            background-color: var(--surface);
-            border-radius: 12px;
+            width: 95%;
+            max-width: 1200px;
+            margin: 20px auto;
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.4);
+            border-radius: 15px;
             overflow: hidden;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-        }
-        
-        #video {
-            width: 100%;
-            display: block;
-            background-color: #000;
-        }
-        
-        .controls-container {
-            padding: 16px;
-            background: linear-gradient(transparent, rgba(0,0,0,0.7));
+            background: #000;
             position: relative;
-            margin-top: -72px;
-            transition: all 0.3s ease;
-            opacity: 0;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            height: 0;
         }
-        
-        .player-container:hover .controls-container {
-            opacity: 1;
-        }
-        
-        .progress-container {
-            width: 100%;
-            height: 4px;
-            background-color: rgba(255, 255, 255, 0.2);
-            margin-bottom: 12px;
-            cursor: pointer;
-        }
-        
-        .progress-bar {
-            height: 100%;
-            background-color: var(--primary);
-            width: 0%;
-            position: relative;
-        }
-        
-        .progress-bar::after {
-            content: '';
+
+        .player-container iframe {
             position: absolute;
-            right: -6px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 12px;
-            height: 12px;
-            background-color: var(--primary);
-            border-radius: 50%;
-            opacity: 0;
-            transition: opacity 0.2s;
-        }
-        
-        .progress-container:hover .progress-bar::after {
-            opacity: 1;
-        }
-        
-        .main-controls {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-        
-        .control-button {
-            background: none;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             border: none;
-            color: var(--on-surface);
+            border-radius: 15px;
+        }
+
+        /* Fullscreen Button */
+        .fullscreen-btn {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            z-index: 10;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            border-radius: 50%;
             width: 40px;
             height: 40px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            font-size: 20px;
             cursor: pointer;
-            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .fullscreen-btn:hover {
+            background: rgba(0, 0, 0, 0.8);
+            transform: scale(1.1);
+        }
+
+        /* Premium Telegram Button Styling */
+        .telegram-container {
+            margin: 25px 0;
+            width: 95%;
+            max-width: 1200px;
         }
         
-        .control-button:hover {
-            background-color: rgba(255, 255, 255, 0.1);
+        .telegram-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 24px;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            background: linear-gradient(135deg, #0088cc, #00a8e8);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
         
-        .control-button.active {
-            color: var(--primary);
+        .telegram-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 136, 204, 0.4);
+            background: linear-gradient(135deg, #00a8e8, #0088cc);
         }
         
-        .control-button .material-icons {
+        .telegram-btn:active {
+            transform: translateY(0);
+        }
+        
+        .telegram-btn::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.1);
+            transform: rotate(45deg);
+            transition: all 0.3s ease;
+        }
+        
+        .telegram-btn:hover::before {
+            left: 100%;
+        }
+        
+        .telegram-icon {
+            margin-right: 10px;
             font-size: 24px;
         }
-        
-        .time-display {
-            font-size: 14px;
-            font-feature-settings: "tnum";
-            margin: 0 8px;
-        }
-        
-        .spacer {
-            flex-grow: 1;
-        }
-        
-        .quality-selector {
-            position: relative;
-        }
-        
-        .quality-button {
-            background-color: rgba(255, 255, 255, 0.1);
-            border: none;
-            color: var(--on-surface);
-            padding: 8px 16px;
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        
-        .quality-button:hover {
-            background-color: rgba(255, 255, 255, 0.2);
-        }
-        
-        .quality-menu {
-            position: absolute;
-            bottom: 100%;
-            right: 0;
-            background-color: var(--surface);
-            border-radius: 8px;
-            padding: 8px 0;
-            min-width: 160px;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-            z-index: 100;
-            display: none;
-        }
-        
-        .quality-selector:hover .quality-menu {
-            display: block;
-        }
-        
-        .quality-option {
-            padding: 12px 16px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .quality-option:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-        
-        .quality-option.active {
-            color: var(--primary);
-        }
-        
-        .language-selector {
-            position: relative;
-        }
-        
-        .language-button {
-            background-color: rgba(255, 255, 255, 0.1);
-            border: none;
-            color: var(--on-surface);
-            padding: 8px 16px;
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        
-        .language-button:hover {
-            background-color: rgba(255, 255, 255, 0.2);
-        }
-        
-        .language-menu {
-            position: absolute;
-            bottom: 100%;
-            right: 0;
-            background-color: var(--surface);
-            border-radius: 8px;
-            padding: 8px 0;
-            min-width: 160px;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-            z-index: 100;
-            display: none;
-        }
-        
-        .language-selector:hover .language-menu {
-            display: block;
-        }
-        
-        .language-option {
-            padding: 12px 16px;
-            cursor: pointer;
-        }
-        
-        .language-option:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-        
-        .language-option.active {
-            color: var(--primary);
-        }
-        
-        .volume-control {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            width: 120px;
-        }
-        
-        .volume-slider {
-            width: 100%;
-            height: 4px;
-            -webkit-appearance: none;
-            appearance: none;
-            background: rgba(255, 255, 255, 0.2);
-            outline: none;
-            border-radius: 2px;
-        }
-        
-        .volume-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 12px;
-            height: 12px;
-            background: var(--primary);
-            border-radius: 50%;
-            cursor: pointer;
-        }
-        
-        .fullscreen-button {
-            margin-left: 8px;
-        }
-        
-        .status-overlay {
-            position: absolute;
-            top: 16px;
-            left: 16px;
-            right: 16px;
-            padding: 12px 16px;
-            background-color: rgba(0, 0, 0, 0.7);
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            z-index: 50;
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-        
-        .status-overlay.visible {
-            opacity: 1;
-        }
-        
-        .status-icon {
-            font-size: 20px;
-        }
-        
-        .loading-spinner {
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top-color: var(--primary);
-            animation: spin 1s linear infinite;
-        }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        
-        .settings-menu {
-            position: absolute;
-            bottom: 100%;
-            right: 0;
-            background-color: var(--surface);
-            border-radius: 8px;
-            padding: 8px 0;
-            min-width: 200px;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-            z-index: 100;
-            display: none;
-        }
-        
-        .settings-button:hover + .settings-menu,
-        .settings-menu:hover {
-            display: block;
-        }
-        
-        .settings-option {
-            padding: 12px 16px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .settings-option:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-        }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
+
+    <!-- Loading Message -->
+    <div class="loading-message">Wait For 10-15 Sec For Loading The Stream</div>
+
+    <!-- 16:9 Player Section -->
     <div class="player-container">
-        <video id="video"></video>
-        
-        <div class="controls-container">
-            <div class="progress-container" id="progressContainer">
-                <div class="progress-bar" id="progressBar"></div>
-            </div>
-            
-            <div class="main-controls">
-                <button class="control-button" id="playButton">
-                    <span class="material-icons">play_arrow</span>
-                </button>
-                
-                <div class="volume-control">
-                    <button class="control-button" id="muteButton">
-                        <span class="material-icons">volume_up</span>
-                    </button>
-                    <input type="range" class="volume-slider" id="volumeSlider" min="0" max="1" step="0.01" value="1">
-                </div>
-                
-                <div class="time-display" id="timeDisplay">00:00 / 00:00</div>
-                
-                <div class="spacer"></div>
-                
-                <div class="quality-selector">
-                    <button class="quality-button" id="qualityButton">
-                        <span class="material-icons">hd</span>
-                        <span id="currentQualityLabel">Auto</span>
-                    </button>
-                    <div class="quality-menu" id="qualityMenu">
-                        <div class="quality-option active" data-quality="auto">Auto</div>
-                        <!-- Quality options will be added dynamically -->
-                    </div>
-                </div>
-                
-                <div class="language-selector">
-                    <button class="language-button" id="languageButton">
-                        <span class="material-icons">language</span>
-                        <span>Hindi</span>
-                    </button>
-                    <div class="language-menu" id="languageMenu">
-                        <div class="language-option active" data-language="HINDI">Hindi</div>
-                        <div class="language-option" data-language="ENGLISH">English</div>
-                        <div class="language-option" data-language="TAMIL">Tamil</div>
-                        <div class="language-option" data-language="TELUGU">Telugu</div>
-                        <div class="language-option" data-language="BENGALI">Bengali</div>
-                        <div class="language-option" data-language="GUJARATI">Gujarati</div>
-                    </div>
-                </div>
-                
-                <button class="control-button fullscreen-button" id="fullscreenButton">
-                    <span class="material-icons">fullscreen</span>
-                </button>
-            </div>
-        </div>
-        
-        <div class="status-overlay" id="statusOverlay">
-            <div class="loading-spinner" id="loadingSpinner"></div>
-            <div id="statusMessage">Loading stream...</div>
-        </div>
+        <iframe id="contentFrame" 
+                sandbox="allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation" 
+                frameborder="0" 
+                gesture="media" 
+                allow="encrypted-media" 
+                allowfullscreen="true" 
+                scrolling="no" 
+                src="https://tv.bdixtv24.co/sports/sportstv.php?c=starhindi">
+        </iframe>
+        <button class="fullscreen-btn" id="fullscreenBtn" title="Toggle Fullscreen">
+            <i class="fas fa-expand"></i>
+        </button>
     </div>
-    
+
+    <!-- Premium Telegram Button -->
+    <div class="telegram-container">
+        <a href="https://t.me/+xl-C7GFGTkM4MDk5" target="_blank" class="telegram-btn">
+            <i class="fab fa-telegram telegram-icon"></i>
+            Join Our Telegram Channel
+        </a>
+    </div>
+
     <script>
-        // DOM Elements
-        const video = document.getElementById('video');
-        const playButton = document.getElementById('playButton');
-        const muteButton = document.getElementById('muteButton');
-        const volumeSlider = document.getElementById('volumeSlider');
-        const progressContainer = document.getElementById('progressContainer');
-        const progressBar = document.getElementById('progressBar');
-        const timeDisplay = document.getElementById('timeDisplay');
-        const qualityButton = document.getElementById('qualityButton');
-        const qualityMenu = document.getElementById('qualityMenu');
-        const currentQualityLabel = document.getElementById('currentQualityLabel');
-        const languageButton = document.getElementById('languageButton');
-        const languageMenu = document.getElementById('languageMenu');
-        const fullscreenButton = document.getElementById('fullscreenButton');
-        const statusOverlay = document.getElementById('statusOverlay');
-        const statusMessage = document.getElementById('statusMessage');
-        const loadingSpinner = document.getElementById('loadingSpinner');
+        // Fullscreen functionality
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
+        const playerContainer = document.querySelector('.player-container');
         
-        // Player state
-        let currentHls = null;
-        let isPlaying = false;
-        let isMuted = false;
-        let currentQuality = 'auto';
-        let availableLevels = [];
-        let hideControlsTimeout;
-        
-        // Language URLs
-        const languageUrls = {
-            'HINDI': 'https://prod-ent-live-gm.jiocinema.com/bpk-tv/JS_M1_IPL25_HIN_IDC_MOB/Fallback/index.m3u8',
-            'ENGLISH': 'https://prod-ent-live-gm.jiocinema.com/bpk-tv/JS_M1_IPL25_ENG_IDC_MOB/Fallback/index.m3u8',
-            'TAMIL': 'https://prod-ent-live-gm.jiocinema.com/bpk-tv/JS_M1_IPL25_TAM_IDC_MOB/Fallback/index.m3u8',
-            'TELUGU': 'https://prod-ent-live-gm.jiocinema.com/bpk-tv/JS_M1_IPL25_TEL_IDC_MOB/Fallback/index.m3u8',
-            'BENGALI': 'https://prod-ent-live-gm.jiocinema.com/bpk-tv/JS_M1_IPL25_BEN_IDC_MOB/Fallback/index.m3u8',
-            'GUJARATI': 'https://prod-ent-live-gm.jiocinema.com/bpk-tv/JS_M1_IPL25_Guj_IDC_MOB/Fallback/index.m3u8'
-        };
-        
-        // Initialize player
-        function initPlayer() {
-            // Set up event listeners
-            video.addEventListener('play', onPlay);
-            video.addEventListener('pause', onPause);
-            video.addEventListener('timeupdate', updateProgress);
-            video.addEventListener('volumechange', onVolumeChange);
-            video.addEventListener('click', togglePlayPause);
-            video.addEventListener('loadedmetadata', initializeVideo);
-            
-            playButton.addEventListener('click', togglePlayPause);
-            muteButton.addEventListener('click', toggleMute);
-            volumeSlider.addEventListener('input', changeVolume);
-            progressContainer.addEventListener('click', seek);
-            fullscreenButton.addEventListener('click', toggleFullscreen);
-            
-            // Set up quality and language menus
-            setupQualityMenu();
-            setupLanguageMenu();
-            
-            // Show controls on mouse move
-            document.addEventListener('mousemove', showControls);
-            
-            // Load initial stream
-            loadStream(languageUrls.HINDI);
-        }
-        
-        // Load HLS stream
-        function loadStream(url) {
-            showStatus('Loading stream...');
-            
-            // Destroy previous HLS instance if exists
-            if (currentHls) {
-                currentHls.destroy();
-            }
-            
-            if (Hls.isSupported()) {
-                currentHls = new Hls({
-                    maxMaxBufferLength: 30,
-                    enableWorker: true,
-                    lowLatencyMode: true,
-                    backBufferLength: 30
-                });
-                
-                currentHls.loadSource(url);
-                currentHls.attachMedia(video);
-                
-                currentHls.on(Hls.Events.MANIFEST_PARSED, function(event, data) {
-                    availableLevels = data.levels;
-                    updateQualityMenu();
-                    video.play().catch(e => {
-                        showStatus('Click to play', 'info');
-                    });
-                    showStatus('Stream loaded', 'success');
-                    setTimeout(hideStatus, 2000);
-                });
-                
-                currentHls.on(Hls.Events.ERROR, function(event, data) {
-                    if (data.fatal) {
-                        let errorMsg = 'Error loading stream';
-                        switch(data.type) {
-                            case Hls.ErrorTypes.NETWORK_ERROR:
-                                errorMsg = 'Network error - Failed to load stream';
-                                break;
-                            case Hls.ErrorTypes.MEDIA_ERROR:
-                                errorMsg = 'Media error - Trying to recover';
-                                currentHls.recoverMediaError();
-                                break;
-                            default:
-                                errorMsg = 'Failed to load stream';
-                        }
-                        showStatus(errorMsg, 'error');
-                    }
-                });
-            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                // For Safari and other browsers that support native HLS
-                video.src = url;
-                video.addEventListener('loadedmetadata', function() {
-                    video.play().catch(e => {
-                        showStatus('Click to play', 'info');
-                    });
-                    showStatus('Stream loaded', 'success');
-                    setTimeout(hideStatus, 2000);
-                });
-            } else {
-                showStatus('HLS is not supported in your browser', 'error');
-            }
-        }
-        
-        // Setup quality menu
-        function setupQualityMenu() {
-            document.querySelectorAll('.quality-option').forEach(option => {
-                option.addEventListener('click', function() {
-                    const quality = this.dataset.quality;
-                    changeQuality(quality);
-                });
-            });
-        }
-        
-        // Update quality menu with available levels
-        function updateQualityMenu() {
-            // Clear existing options (except Auto)
-            while (qualityMenu.children.length > 1) {
-                qualityMenu.removeChild(qualityMenu.lastChild);
-            }
-            
-            // Add available quality levels
-            availableLevels.forEach(level => {
-                const option = document.createElement('div');
-                option.className = 'quality-option';
-                option.textContent = `${level.height}p`;
-                option.dataset.quality = level.height;
-                option.addEventListener('click', () => changeQuality(level.height));
-                qualityMenu.appendChild(option);
-            });
-            
-            // Mark current quality as active
-            document.querySelectorAll('.quality-option').forEach(opt => {
-                opt.classList.remove('active');
-                if ((currentQuality === 'auto' && opt.textContent === 'Auto') || 
-                    (currentQuality !== 'auto' && parseInt(opt.dataset.quality) === parseInt(currentQuality))) {
-                    opt.classList.add('active');
-                }
-            });
-        }
-        
-        // Change video quality
-        function changeQuality(quality) {
-            if (!currentHls) return;
-            
-            if (quality === 'auto') {
-                currentHls.currentLevel = -1;
-                currentQuality = 'auto';
-                currentQualityLabel.textContent = 'Auto';
-            } else {
-                const level = availableLevels.findIndex(l => l.height === parseInt(quality));
-                if (level !== -1) {
-                    currentHls.currentLevel = level;
-                    currentQuality = quality;
-                    currentQualityLabel.textContent = `${quality}p`;
-                }
-            }
-            
-            showStatus(`Quality set to ${quality === 'auto' ? 'Auto' : quality + 'p'}`, 'success');
-            setTimeout(hideStatus, 2000);
-        }
-        
-        // Setup language menu
-        function setupLanguageMenu() {
-            document.querySelectorAll('.language-option').forEach(option => {
-                option.addEventListener('click', function() {
-                    const language = this.dataset.language;
-                    changeLanguage(language);
-                });
-            });
-        }
-        
-        // Change language
-        function changeLanguage(language) {
-            const url = languageUrls[language];
-            if (url) {
-                // Update active language in menu
-                document.querySelectorAll('.language-option').forEach(opt => {
-                    opt.classList.remove('active');
-                    if (opt.dataset.language === language) {
-                        opt.classList.add('active');
-                    }
-                });
-                
-                // Update language button text
-                const languageName = document.querySelector(`.language-option[data-language="${language}"]`).textContent;
-                languageButton.querySelector('span:last-child').textContent = languageName;
-                
-                loadStream(url);
-                showStatus(`Switched to ${languageName}`, 'success');
-            }
-        }
-        
-        // Initialize video duration
-        function initializeVideo() {
-            updateTimeDisplay();
-        }
-        
-        // Update progress bar
-        function updateProgress() {
-            if (video.duration) {
-                const progress = (video.currentTime / video.duration) * 100;
-                progressBar.style.width = `${progress}%`;
-                updateTimeDisplay();
-            }
-        }
-        
-        // Update time display
-        function updateTimeDisplay() {
-            if (video.duration) {
-                const currentTime = formatTime(video.currentTime);
-                const duration = formatTime(video.duration);
-                timeDisplay.textContent = `${currentTime} / ${duration}`;
-            }
-        }
-        
-        // Format time (seconds to HH:MM:SS)
-        function formatTime(seconds) {
-            const h = Math.floor(seconds / 3600);
-            const m = Math.floor((seconds % 3600) / 60);
-            const s = Math.floor(seconds % 60);
-            
-            return h > 0 
-                ? `${h}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`
-                : `${m}:${s.toString().padStart(2, '0')}`;
-        }
-        
-        // Seek video
-        function seek(e) {
-            const percent = e.offsetX / this.offsetWidth;
-            video.currentTime = percent * video.duration;
-        }
-        
-        // Player control functions
-        function togglePlayPause() {
-            if (video.paused) {
-                video.play().catch(e => {
-                    showStatus('Click to play', 'info');
-                });
-            } else {
-                video.pause();
-            }
-        }
-        
-        function onPlay() {
-            isPlaying = true;
-            playButton.innerHTML = '<span class="material-icons">pause</span>';
-        }
-        
-        function onPause() {
-            isPlaying = false;
-            playButton.innerHTML = '<span class="material-icons">play_arrow</span>';
-        }
-        
-        function toggleMute() {
-            video.muted = !video.muted;
-        }
-        
-        function onVolumeChange() {
-            isMuted = video.muted;
-            muteButton.innerHTML = isMuted 
-                ? '<span class="material-icons">volume_off</span>'
-                : '<span class="material-icons">volume_up</span>';
-            volumeSlider.value = video.volume;
-        }
-        
-        function changeVolume() {
-            video.volume = this.value;
-            video.muted = this.value === 0;
-        }
+        fullscreenBtn.addEventListener('click', toggleFullscreen);
         
         function toggleFullscreen() {
             if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen().catch(err => {
-                    console.error(`Error attempting to enable fullscreen: ${err.message}`);
-                });
-            } else {
-                document.exitFullscreen();
-            }
-        }
-        
-        // Show controls
-        function showControls() {
-            const controls = document.querySelector('.controls-container');
-            controls.style.opacity = '1';
-            clearTimeout(hideControlsTimeout);
-            hideControlsTimeout = setTimeout(() => {
-                if (!video.paused) {
-                    controls.style.opacity = '0';
+                if (playerContainer.requestFullscreen) {
+                    playerContainer.requestFullscreen();
+                } else if (playerContainer.webkitRequestFullscreen) { /* Safari */
+                    playerContainer.webkitRequestFullscreen();
+                } else if (playerContainer.msRequestFullscreen) { /* IE11 */
+                    playerContainer.msRequestFullscreen();
                 }
-            }, 3000);
-        }
-        
-        // Status message functions
-        function showStatus(message, type = 'info') {
-            statusOverlay.classList.add('visible');
-            statusMessage.textContent = message;
-            
-            // Update spinner and icon based on type
-            if (type === 'error') {
-                loadingSpinner.style.display = 'none';
-                statusOverlay.style.backgroundColor = 'rgba(207, 102, 121, 0.9)';
-            } else if (type === 'success') {
-                loadingSpinner.style.display = 'none';
-                statusOverlay.style.backgroundColor = 'rgba(3, 218, 198, 0.9)';
+                fullscreenBtn.innerHTML = '<i class="fas fa-compress"></i>';
             } else {
-                loadingSpinner.style.display = 'block';
-                statusOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) { /* Safari */
+                    document.webkitExitFullscreen();
+                } else if (document.msExitFullscreen) { /* IE11 */
+                    document.msExitFullscreen();
+                }
+                fullscreenBtn.innerHTML = '<i class="fas fa-expand"></i>';
             }
         }
         
-        function hideStatus() {
-            statusOverlay.classList.remove('visible');
-        }
+        // Change icon when fullscreen state changes
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+        document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+        document.addEventListener('msfullscreenchange', handleFullscreenChange);
         
-        // Initialize when DOM is loaded
-        document.addEventListener('DOMContentLoaded', initPlayer);
+        function handleFullscreenChange() {
+            if (document.fullscreenElement || 
+                document.webkitFullscreenElement || 
+                document.msFullscreenElement) {
+                fullscreenBtn.innerHTML = '<i class="fas fa-compress"></i>';
+            } else {
+                fullscreenBtn.innerHTML = '<i class="fas fa-expand"></i>';
+            }
+        }
     </script>
+
 </body>
 </html>
