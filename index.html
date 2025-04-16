@@ -1,96 +1,127 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Terabox Downloader</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f9f9f9;
-      color: #333;
-      text-align: center;
-      padding: 50px 20px;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TeraBox Downloader</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
 
-    input, button {
-      padding: 10px;
-      width: 80%;
-      max-width: 400px;
-      margin: 10px 0;
-      font-size: 16px;
-    }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
 
-    button {
-      background-color: #007bff;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
 
-    button:hover {
-      background-color: #0056b3;
-    }
+        label {
+            font-size: 16px;
+            margin-bottom: 10px;
+            display: block;
+        }
 
-    #result {
-      margin-top: 20px;
-      word-wrap: break-word;
-    }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
 
-    footer {
-      margin-top: 60px;
-      font-size: 14px;
-      color: #888;
-    }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
 
-    a {
-      color: #007bff;
-      text-decoration: none;
-    }
+        button:hover {
+            background-color: #45a049;
+        }
 
-    a:hover {
-      text-decoration: underline;
-    }
-  </style>
+        .download-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .download-link a {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .download-link a:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <h1>TeraBox File Downloader</h1>
+        <form id="downloadForm" method="POST">
+            <label for="teraboxLink">Enter your TeraBox link:</label>
+            <input type="text" id="teraboxLink" name="teraboxLink" placeholder="Paste TeraBox link here" required>
+            <button type="submit">Get Download Link</button>
+        </form>
 
-  <h2>Terabox Downloader</h2>
-  <input type="text" id="urlInput" placeholder="Enter Terabox URL">
-  <button onclick="downloadFile()">Download</button>
+        <!-- Show download link if available -->
+        <div class="download-link" id="downloadLinkSection" style="display: none;">
+            <p>Click below to download your file:</p>
+            <a id="downloadLink" href="#" target="_blank">Download File</a>
+        </div>
+    </div>
 
-  <div id="result"></div>
+    <script>
+        // Handle form submission
+        document.getElementById('downloadForm').addEventListener('submit', function (e) {
+            e.preventDefault();
 
-  <footer>Made with ❤️ by Codex. | <a href="https://codexisme.is-a.dev" target="_blank">codexisme.is-a.dev</a></footer>
+            // Get the TeraBox link from input
+            const teraboxLink = document.getElementById('teraboxLink').value;
 
-  <script>
-    async function downloadFile() {
-      const input = document.getElementById("urlInput").value.trim();
-      const resultDiv = document.getElementById("result");
-
-      if (!input) {
-        resultDiv.innerHTML = "<p>Please enter a Terabox link.</p>";
-        return;
-      }
-
-      resultDiv.innerHTML = "<p>Fetching download link...</p>";
-
-      try {
-        const response = await fetch(`https://terabox-pro-api.vercel.app/api?link=${encodeURIComponent(input)}`);
-        const data = await response.json();
-
-        if (data && data.downloadUrl) {
-          resultDiv.innerHTML = `
-            <p><strong>Filename:</strong> ${data.filename}</p>
-            <a href="${data.downloadUrl}" download>Click to Download</a>
-          `;
-        } else {
-          resultDiv.innerHTML = "<p>Could not retrieve download link. Please check the URL.</p>";
-        }
-      } catch (error) {
-        resultDiv.innerHTML = "<p>Error: " + error.message + "</p>";
-      }
-    }
-  </script>
-
+            // Call backend API (this part would be handled with your backend code)
+            fetch('/get-direct-link', {  // Modify URL based on your backend
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ link: teraboxLink }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.download_url) {
+                    // Show the download link
+                    document.getElementById('downloadLinkSection').style.display = 'block';
+                    document.getElementById('downloadLink').href = data.download_url;
+                } else {
+                    alert('Failed to retrieve download link.');
+                }
+            })
+            .catch(error => {
+                alert('Error fetching download link.');
+            });
+        });
+    </script>
 </body>
 </html>
