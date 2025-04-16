@@ -75,7 +75,7 @@
       resultDiv.innerHTML = "<p>Fetching download link...</p>";
 
       try {
-        const response = await fetch(`https://terabox-api.digitalera.workers.dev/?url=${encodeURIComponent(input)}`);
+        const response = await fetch(`https://terabox-pro-api.vercel.app/api?link=${encodeURIComponent(input)}`);
         const data = await response.json();
 
         if (data && data.downloadUrl) {
