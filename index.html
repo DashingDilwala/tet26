@@ -5,11 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
   <title>Learn with PW</title>
 
-  <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
-  <script src="https://cdn.jsdelivr.net/npm/plyr@3.7.3/dist/plyr.min.js"></script>
-  <script src="https://cdn.rawgit.com/video-dev/hls.js/18bb552/dist/hls.min.js"></script>
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <script disable-devtool-auto="true" src="https://cdn.jsdelivr.net/npm/disable-devtool" clear-log="true" disable-select="true" disable-copy="true" disable-cut="true" disable-paste="true"></script>
+  <!-- Shaka Player Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/3.0.0/shaka-player.compiled.js"></script>
 
   <style>
     /* Styling for the container to make it look good on both mobile and desktop */
@@ -55,12 +52,32 @@
     .telegram-btn:hover {
       background-color: #007bb5;
     }
+
+    /* Restart Button Styling */
+    .restart-btn {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #ff5722;
+      color: white;
+      text-decoration: none;
+      font-size: 16px;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+    }
+
+    .restart-btn:hover {
+      background-color: #e64a19;
+    }
   </style>
 </head>
 <body class="bg-gray-900 text-white">
   <div class="container">
     <span class="dots"></span>
-    <video controls playsinline></video>
+    <video id="video" controls playsinline></video>
+
+    <!-- Restart Button -->
+    <a href="javascript:void(0);" class="restart-btn" onclick="restartVideo()">Restart Video</a>
 
     <!-- Telegram Channel Button -->
     <a href="https://t.me/YourTelegramChannel" class="telegram-btn" target="_blank">JOIN OUR TELEGRAM CHANNEL</a>
@@ -79,6 +96,12 @@
       }, duration);
     }
 
+    function restartVideo() {
+      const video = document.getElementById('video');
+      video.currentTime = 0; // Reset the video to the start
+      video.play(); // Play the video again
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
       const urlParams = new URLSearchParams(window.location.search);
       const source = urlParams.get('video'); // Get video URL from query parameter
@@ -88,50 +111,33 @@
         return;
       }
 
-      const controls = [
-        'play-large', 'rewind', 'play', 'fast-forward',
-        'progress', 'current-time', 'duration',
-        'mute', 'volume', 'settings', 'fullscreen'
-      ];
+      const video = document.getElementById('video');
+      
+      // Initialize Shaka Player
+      const player = new shaka.Player(video);
 
-      const video = document.querySelector('video');
-      const defaultOptions = {
-        controls,
-        captions: { active: true, update: false, language: 'auto' }
-      };
+      // Attach error handler
+      player.addEventListener('error', onError);
 
       // Simple check for HLS stream (ends with .m3u8)
       const isHls = source.trim().toLowerCase().endsWith('.m3u8');
 
-      if (isHls && Hls.isSupported()) {
-        const hls = new Hls();
-        hls.loadSource(source);
-        hls.attachMedia(video);
-        hls.on(Hls.Events.MANIFEST_PARSED, function () {
-          const availableQualities = hls.levels.map((l) => l.height).filter((v, i, a) => a.indexOf(v) === i);
-          defaultOptions.quality = {
-            default: availableQualities[0],
-            options: availableQualities,
-            forced: true,
-            onChange: (e) => updateQuality(e),
-          };
-          new Plyr(video, defaultOptions);
-        });
-        window.hls = hls;
-
-        function updateQuality(newQuality) {
-          window.hls.levels.forEach((level, levelIndex) => {
-            if (level.height === newQuality) {
-              window.hls.currentLevel = levelIndex;
-            }
-          });
-        }
+      if (isHls) {
+        // If the video is HLS, we can use Shaka Player's native support for HLS
+        player.load(source).then(function() {
+          console.log('HLS stream loaded successfully');
+        }).catch(onError);
       } else {
-        // For direct MP4 or other formats just use Plyr normally
+        // For direct MP4 or other formats, just use Shaka Player normally
         video.src = source;
-        new Plyr(video, defaultOptions);
       }
     });
+
+    function onError(event) {
+      const error = event.detail;
+      console.error('Error code', error.code, 'object', error);
+      showToast("An error occurred while loading the video");
+    }
   </script>
 </body>
 </html>
