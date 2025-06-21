@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
   <title>Learn with PW</title>
 
-  <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
-  <script src="https://cdn.jsdelivr.net/npm/shaka-player@3.2.0/dist/shaka-player.compiled.js"></script>
-  
+  <!-- Shaka Player CSS and JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/3.2.0/shaka-player.compiled.js"></script>
+
   <script src="https://unpkg.com/lucide@latest"></script>
   <script disable-devtool-auto="true" src="https://cdn.jsdelivr.net/npm/disable-devtool" clear-log="true" disable-select="true" disable-copy="true" disable-cut="true" disable-paste="true"></script>
 
@@ -90,7 +90,7 @@
 
       const video = document.getElementById('video');
       
-      // Initialize Shaka Player
+      // Check if Shaka Player is supported in the browser
       if (shaka.Player.isBrowserSupported()) {
         const player = new shaka.Player(video);
 
@@ -99,12 +99,10 @@
 
         // Attempt to load the video (HLS or MP4)
         if (source.trim().toLowerCase().endsWith('.m3u8')) {
-          // Handle HLS source with Shaka Player
-          player.load(source).then(function () {
-            console.log('The video has been loaded successfully!');
-          }).catch(onError);
+          // Handle HLS stream with Shaka Player
+          loadHLS(player, source);
         } else {
-          // Direct MP4 or other formats
+          // Handle direct MP4 or other formats
           player.load(source).then(function () {
             console.log('The video has been loaded successfully!');
           }).catch(onError);
@@ -112,13 +110,27 @@
       } else {
         showToast("Shaka Player is not supported in this browser");
       }
-
-      // Error handling function
-      function onErrorEvent(event) {
-        console.error('Shaka Player Error:', event);
-        showToast("Error loading video");
-      }
     });
+
+    // Load HLS stream using Shaka Player
+    function loadHLS(player, source) {
+      const manifestUri = source;
+      
+      // Shaka Player supports HLS streams natively
+      player.load(manifestUri).then(() => {
+        console.log('HLS stream loaded successfully');
+      }).catch(onError);
+    }
+
+    // Error handling function
+    function onError(event) {
+      console.error('Shaka Player Error:', event);
+      showToast("Error loading video");
+    }
+
+    function onErrorEvent(event) {
+      onError(event);
+    }
   </script>
 </body>
 </html>
