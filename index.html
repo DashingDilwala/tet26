@@ -52,32 +52,12 @@
     .telegram-btn:hover {
       background-color: #007bb5;
     }
-
-    /* Restart Button Styling */
-    .restart-btn {
-      display: inline-block;
-      margin-top: 20px;
-      padding: 10px 20px;
-      background-color: #ff5722;
-      color: white;
-      text-decoration: none;
-      font-size: 16px;
-      border-radius: 5px;
-      transition: background-color 0.3s ease;
-    }
-
-    .restart-btn:hover {
-      background-color: #e64a19;
-    }
   </style>
 </head>
 <body class="bg-gray-900 text-white">
   <div class="container">
     <span class="dots"></span>
     <video id="video" controls playsinline></video>
-
-    <!-- Restart Button -->
-    <a href="javascript:void(0);" class="restart-btn" onclick="restartVideo()">Restart Video</a>
 
     <!-- Telegram Channel Button -->
     <a href="https://t.me/YourTelegramChannel" class="telegram-btn" target="_blank">JOIN OUR TELEGRAM CHANNEL</a>
@@ -87,6 +67,7 @@
   <div id="toast"></div>
 
   <script>
+    // Show a toast notification with a message for a specific duration
     function showToast(message, duration = 3000) {
       const toast = document.getElementById("toast");
       toast.textContent = message;
@@ -96,12 +77,7 @@
       }, duration);
     }
 
-    function restartVideo() {
-      const video = document.getElementById('video');
-      video.currentTime = 0; // Reset the video to the start
-      video.play(); // Play the video again
-    }
-
+    // Wait for the page to fully load before running the script
     document.addEventListener('DOMContentLoaded', () => {
       const urlParams = new URLSearchParams(window.location.search);
       const source = urlParams.get('video'); // Get video URL from query parameter
@@ -112,27 +88,28 @@
       }
 
       const video = document.getElementById('video');
-
+      
       // Initialize Shaka Player
       const player = new shaka.Player(video);
 
       // Attach error handler
       player.addEventListener('error', onError);
 
-      // Simple check for HLS stream (ends with .m3u8)
+      // Check if the URL is an HLS stream (ends with .m3u8)
       const isHls = source.trim().toLowerCase().endsWith('.m3u8');
 
       if (isHls) {
-        // If the video is HLS, we can use Shaka Player's native support for HLS
+        // If the video is HLS, use Shaka Player to load and play the HLS stream
         player.load(source).then(function() {
           console.log('HLS stream loaded successfully');
         }).catch(onError);
       } else {
-        // For direct MP4 or other formats, just use Shaka Player normally
+        // For MP4 or other formats, just set the source directly
         video.src = source;
       }
     });
 
+    // Error handler function
     function onError(event) {
       const error = event.detail;
       console.error('Error code', error.code, 'object', error);
