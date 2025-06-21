@@ -5,8 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
   <title>Learn with PW</title>
 
-  <!-- Shaka Player Library -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/3.0.0/shaka-player.compiled.js"></script>
+  <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
+  <script src="https://cdn.jsdelivr.net/npm/shaka-player@3.2.0/dist/shaka-player.compiled.js"></script>
+  
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script disable-devtool-auto="true" src="https://cdn.jsdelivr.net/npm/disable-devtool" clear-log="true" disable-select="true" disable-copy="true" disable-cut="true" disable-paste="true"></script>
 
   <style>
     /* Styling for the container to make it look good on both mobile and desktop */
@@ -57,7 +60,7 @@
 <body class="bg-gray-900 text-white">
   <div class="container">
     <span class="dots"></span>
-    <video id="video" controls playsinline></video>
+    <video id="video" controls></video>
 
     <!-- Telegram Channel Button -->
     <a href="https://t.me/YourTelegramChannel" class="telegram-btn" target="_blank">JOIN OUR TELEGRAM CHANNEL</a>
@@ -67,7 +70,6 @@
   <div id="toast"></div>
 
   <script>
-    // Show a toast notification with a message for a specific duration
     function showToast(message, duration = 3000) {
       const toast = document.getElementById("toast");
       toast.textContent = message;
@@ -77,7 +79,6 @@
       }, duration);
     }
 
-    // Wait for the page to fully load before running the script
     document.addEventListener('DOMContentLoaded', () => {
       const urlParams = new URLSearchParams(window.location.search);
       const source = urlParams.get('video'); // Get video URL from query parameter
@@ -90,31 +91,34 @@
       const video = document.getElementById('video');
       
       // Initialize Shaka Player
-      const player = new shaka.Player(video);
+      if (shaka.Player.isBrowserSupported()) {
+        const player = new shaka.Player(video);
 
-      // Attach error handler
-      player.addEventListener('error', onError);
+        // Error handling
+        player.addEventListener('error', onErrorEvent);
 
-      // Check if the URL is an HLS stream (ends with .m3u8)
-      const isHls = source.trim().toLowerCase().endsWith('.m3u8');
-
-      if (isHls) {
-        // If the video is HLS, use Shaka Player to load and play the HLS stream
-        player.load(source).then(function() {
-          console.log('HLS stream loaded successfully');
-        }).catch(onError);
+        // Attempt to load the video (HLS or MP4)
+        if (source.trim().toLowerCase().endsWith('.m3u8')) {
+          // Handle HLS source with Shaka Player
+          player.load(source).then(function () {
+            console.log('The video has been loaded successfully!');
+          }).catch(onError);
+        } else {
+          // Direct MP4 or other formats
+          player.load(source).then(function () {
+            console.log('The video has been loaded successfully!');
+          }).catch(onError);
+        }
       } else {
-        // For MP4 or other formats, just set the source directly
-        video.src = source;
+        showToast("Shaka Player is not supported in this browser");
+      }
+
+      // Error handling function
+      function onErrorEvent(event) {
+        console.error('Shaka Player Error:', event);
+        showToast("Error loading video");
       }
     });
-
-    // Error handler function
-    function onError(event) {
-      const error = event.detail;
-      console.error('Error code', error.code, 'object', error);
-      showToast("An error occurred while loading the video");
-    }
   </script>
 </body>
 </html>
